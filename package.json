@@ -1,0 +1,42 @@
+{
+  "name": "review-aggregator",
+  "version": "1.0.0",
+  "description": "Aggregage place reviews from multiple review sites",
+  "main": "server/index.js",
+  "scripts": {
+    "server-dev": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brlee19/review-aggregator.git"
+  },
+  "keywords": [
+    "reviews"
+  ],
+  "author": "Brian Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brlee19/review-aggregator/issues"
+  },
+  "homepage": "https://github.com/brlee19/review-aggregator#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "material-ui": "^0.20.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.23.0",
+    "file-loader": "^1.1.11",
+    "url-loader": "^1.0.1",
+    "webpack": "^2.2.1",
+    "webpack-cli": "^2.0.14"
+  }
+}
