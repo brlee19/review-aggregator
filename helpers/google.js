@@ -19,14 +19,24 @@ const searchPlacesByAddress = (address, query) => {
         key: apiKey,
         location: `${coords.lat},${coords.lng}`,
         type: query.type,
-        radius: '500', //default radius for now
+        radius: '5000', //default radius for now
         keyword: query.keyword
       }
       return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
         .then(resp => resp.data.results)
         .catch(err => console.log(err))
     })
+};
+
+const getPlaceDetails = (placeid) => {
+  const params = {placeid: placeid, key: apiKey};
+  return axios.get('https://maps.googleapis.com/maps/api/place/details/json?', {params: params})
+    .then((resp) => {
+      return resp.data.result;
+    })
+    .catch((err) => {console.log(err)})
 }
 
 exports.convertAddressToCoords = convertAddressToCoords;
 exports.searchPlacesByAddress = searchPlacesByAddress;
+exports.getPlaceDetails = getPlaceDetails;
