@@ -19,49 +19,33 @@ const getYelpDetailsFromGoogleId = (googleId) => {
 			};
 			const tokenHeader = {'Authorization': 'Bearer ' + yelpToken};
 			return axios.get('https://api.yelp.com/v3/businesses/matches/best', {headers: tokenHeader, params: params})
-				.then((resp) => {console.log('resp was', resp.data)})
+				.then((resp) => {return resp.data})
 				.catch((err) => {console.log(err)}); //is this catch necessary?
 		})
 		.catch(err => console.log(err));  
 }
 
 const convertGoogleAddressToYelp = (googleAddress) => {
-  // const googleAddress = testGoogleAddress;
-	let yelpAddress = {};
 
-  const streetNumber = googleAddress.reduce((result, component) => {
-    if (component.types.includes('street_number')) return component.long_name;
-    return result;
-  }, '');
+  const extractGoogleAddressComponentLong = (type) => {
+    return googleAddress.reduce((result, component) => {
+      return (component.types.includes(type)) ? component.long_name : result;
+    });
+  }
 
-  const streetName = googleAddress.reduce((result, component) => {
-    if (component.types.includes('route')) return component.long_name;
-    return result;
-	}, '');
-	
-	yelpAddress.address1 = `${streetNumber} ${streetName}`;
+  const extractGoogleAddressComponentShort = (type) => {
+    return googleAddress.reduce((result, component) => {
+      return (component.types.includes(type)) ? component.short_name : result;
+    });
+  }
 
-  yelpAddress.city = googleAddress.reduce((result, component) => {
-    if (component.types.includes('locality')) return component.long_name;
-    return result;
-  }, '');
-
-  yelpAddress.state = googleAddress.reduce((result, component) => {
-    if (component.types.includes('administrative_area_level_1')) return component.short_name; //states in the US, may not work intl
-    return result;
-	}, '');
-	
-	yelpAddress.country = googleAddress.reduce((result, component) => {
-		if (component.types.includes('country')) return component.short_name;
-		return result;
-	}, '');
-
-  yelpAddress.zip_code = googleAddress.reduce((result, component) => {
-    if (component.types.includes('postal_code')) return component.long_name;
-    return result;
-  }, '');
-
-  return yelpAddress;
+  return {
+    address1: `${extractGoogleAddressComponentLong('street_number')} ${extractGoogleAddressComponentLong('route')}`,
+    city: extractGoogleAddressComponentLong('locality'),
+    state: extractGoogleAddressComponentShort('administrative_area_level_1'),
+    country: extractGoogleAddressComponentShort('country'),
+    zip_code: extractGoogleAddressComponentLong('postal_code')
+  }
 };
 
 exports.getYelpDetailsFromGoogleId = getYelpDetailsFromGoogleId;
