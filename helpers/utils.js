@@ -19,9 +19,19 @@ const getYelpDetailsFromGoogleId = (googleId) => {
 			};
 			const tokenHeader = {'Authorization': 'Bearer ' + yelpToken};
 			return axios.get('https://api.yelp.com/v3/businesses/matches/best', {headers: tokenHeader, params: params})
-				.then((resp) => {return resp.data})
+				.then((resp) => {
+          // console.log('yelp id is', resp.data.businesses[0].id);
+          return resp.data.businesses[0].id;
+        })
 				.catch((err) => {console.log(err)}); //is this catch necessary?
-		})
+    })
+    .then((yelpId) => {
+      console.log('reached next promise chain, yelpid is', yelpId)
+      const tokenHeader = {'Authorization': 'Bearer ' + yelpToken};
+      return axios.get(`https://api.yelp.com/v3/businesses/${yelpId}`, {headers: tokenHeader})
+        .then((resp) => {return resp.data})
+        .catch((err) => console.log(err))
+    })
 		.catch(err => console.log(err));  
 }
 
@@ -31,13 +41,13 @@ const convertGoogleAddressToYelp = (googleAddress) => {
     return googleAddress.reduce((result, component) => {
       return (component.types.includes(type)) ? component.long_name : result;
     });
-  }
+  };
 
   const extractGoogleAddressComponentShort = (type) => {
     return googleAddress.reduce((result, component) => {
       return (component.types.includes(type)) ? component.short_name : result;
     });
-  }
+  };
 
   return {
     address1: `${extractGoogleAddressComponentLong('street_number')} ${extractGoogleAddressComponentLong('route')}`,
@@ -45,7 +55,7 @@ const convertGoogleAddressToYelp = (googleAddress) => {
     state: extractGoogleAddressComponentShort('administrative_area_level_1'),
     country: extractGoogleAddressComponentShort('country'),
     zip_code: extractGoogleAddressComponentLong('postal_code')
-  }
+  };
 };
 
 exports.getYelpDetailsFromGoogleId = getYelpDetailsFromGoogleId;

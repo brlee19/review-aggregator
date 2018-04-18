@@ -22,11 +22,17 @@ app.get('/testgoogle', (req, res) => {
   // console.log(apiHelpers.convertGoogleAddressToYelp('test'));
     // .then((address) => {res.send(address)})
     // .catch((err) => {res.send(err)})
-  const testId = "ChIJ3VhbOeVYwokRck8jQGsiwec";
-  apiHelpers.getYelpDetailsFromGoogleId(testId)
-    .then((result) => res.send(result))
-    .catch((err) => res.send(err));
-    
+
+  // const testId = "ChIJ3VhbOeVYwokRck8jQGsiwec";
+  // apiHelpers.getYelpDetailsFromGoogleId(testId)
+  //   .then((result) => res.send(result))
+  //   .catch((err) => res.send(err));
+    google.searchPlacesByAddress('350 E 30th St, New York NY', {type: 'restaurant', keyword: 'sushi'})
+      .then(data => {
+        console.log(`there are ${data.length} results`);
+        res.send(data);
+      })
+      .catch(err => res.send(err));
 });
 
 app.get('/testyelp', (req, res) => {
