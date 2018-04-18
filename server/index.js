@@ -10,6 +10,21 @@ app.listen(port, () => console.log(`listening on port ${port}!`));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
+app.post('/search', (req, res) => {
+  const userQuery = req.body.data;
+  // console.log('userQuery is', userQuery);
+  google.convertAddressToCoords(userQuery.address)
+    .then((coords) => {
+      // console.log('coords are', coords);
+      return google.searchPlacesByCoords(coords, userQuery)
+    })
+    .then((googleData) => {
+      console.log('google data is', googleData)
+      res.send(googleData);
+    })
+    .catch(err => res.send(err));
+});
+
 app.get('/testgoogle', (req, res) => {
   // google.searchPlacesByAddress('350 E 30th Street New york', {type: 'restaurant', keyword: 'sushi'})
   //   .then(places => {

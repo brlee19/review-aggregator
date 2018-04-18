@@ -11,26 +11,23 @@ const convertAddressToCoords = (address) => {
     .catch(err => console.log('err trying to get lat/lon from google:', err)) //not sure if this needs to be here or should just be chained
 };
 
-const searchPlacesByAddress = (address, query) => {
+const searchPlacesByCoords = (coords, query) => { //using coords so all the APIs can use it
   //query is something like {type: 'restaurant', keyword:'sushi'}
-  return convertAddressToCoords(address)
-    .then((coords) => {
-      const params = {
-        key: apiKey,
-        location: `${coords.lat},${coords.lng}`,
-        type: query.type,
-        radius: '10000', //default radius for now
-        keyword: query.keyword
+  const params = {
+    key: apiKey,
+    location: `${coords.lat},${coords.lng}`,
+    type: query.type,
+    radius: '10000', //default radius for now
+    keyword: query.keyword
+  };
+  return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
+    .then(resp => {
+      return {
+        places: resp.data.results,
+        averageRating: getAverageRating(resp.data.results)
       }
-      return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
-        .then(resp => {
-          return {
-            places: resp.data.results,
-            averageRating: getAverageRating(resp.data.results)
-          }
-        })
-        .catch(err => console.log(err))
     })
+    .catch(err => console.log(err));
 };
 
 const getPlaceDetails = (placeid) => {
@@ -51,5 +48,5 @@ const getAverageRating = (places) => { //same as yelp but different from foursqu
 };
 
 exports.convertAddressToCoords = convertAddressToCoords;
-exports.searchPlacesByAddress = searchPlacesByAddress;
+exports.searchPlacesByCoords = searchPlacesByCoords;
 exports.getPlaceDetails = getPlaceDetails;
