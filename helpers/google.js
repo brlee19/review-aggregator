@@ -19,7 +19,7 @@ const searchPlacesByAddress = (address, query) => {
         key: apiKey,
         location: `${coords.lat},${coords.lng}`,
         type: query.type,
-        radius: '5000', //default radius for now
+        radius: '10000', //default radius for now
         keyword: query.keyword
       }
       return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
