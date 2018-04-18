@@ -8,8 +8,8 @@ class Search extends React.Component {
     super(props);
     this.state = { //keys match google API cats except for location
       type: 'restaurant',
-      keyword: '',
-      address: '', //add something so you can't search without this??
+      keyword: 'korean',
+      address: '369 Lexington Avenue, New York NY', //add something so you can't search without this??
       radius: '500' //convert to number later
     };
 

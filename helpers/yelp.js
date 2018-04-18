@@ -6,7 +6,7 @@ const searchPlacesByCoords = (coords, query) => {
   const config = {
     latitude: coords.lat, //to number?
     longitude: coords.lng,
-    radius: 10000,
+    radius: 5000,
     categories: query.categories, //may need to map google to yelp cats, cats are optional for yelp OR just use google for searching and use yelp for reviews
     term: query.term
   };
@@ -30,4 +30,16 @@ const getAverageRating = (places) => { //same as yelp but different from foursqu
   return Number((Math.round(avgRating * 100)/ 100).toFixed(1));
 };
 
+const googleTypesToYelpCategories = {
+  restaurant: 'restaurants', //build this out further for other cats, though there's not a neat mapping
+};
+
+const convertReactQueryForApi = (userQuery) => {
+  let yelpQuery = {};
+  yelpQuery.term = userQuery.keyword;
+  yelpQuery[googleTypesToYelpCategories[userQuery.type]] = userQuery.type;
+  return yelpQuery;
+};
+
 exports.searchPlacesByCoords = searchPlacesByCoords;
+exports.mapQuery = convertReactQueryForApi;
