@@ -35,20 +35,21 @@ const getYelpDetailsFromGoogleId = (googleId) => {
 		.catch(err => console.log(err));  
 }
 
+//address converters
+
+const extractGoogleAddressComponentLong = (type) => {
+  return googleAddress.reduce((result, component) => {
+    return (component.types.includes(type)) ? component.long_name : result;
+  });
+};
+
+const extractGoogleAddressComponentShort = (type) => {
+  return googleAddress.reduce((result, component) => {
+    return (component.types.includes(type)) ? component.short_name : result;
+  });
+};
+
 const convertGoogleAddressToYelp = (googleAddress) => {
-
-  const extractGoogleAddressComponentLong = (type) => {
-    return googleAddress.reduce((result, component) => {
-      return (component.types.includes(type)) ? component.long_name : result;
-    });
-  };
-
-  const extractGoogleAddressComponentShort = (type) => {
-    return googleAddress.reduce((result, component) => {
-      return (component.types.includes(type)) ? component.short_name : result;
-    });
-  };
-
   return {
     address1: `${extractGoogleAddressComponentLong('street_number')} ${extractGoogleAddressComponentLong('route')}`,
     city: extractGoogleAddressComponentLong('locality'),
@@ -57,6 +58,8 @@ const convertGoogleAddressToYelp = (googleAddress) => {
     zip_code: extractGoogleAddressComponentLong('postal_code')
   };
 };
+
+//review results standardizers
 
 const detectReviewSite = (result) => {
   if (result.hasOwnProperty('place_id') || result.hasOwnProperty('geometry')) return 'google';
@@ -87,7 +90,7 @@ const conformSearchResult = (result) => { //type should still be in react state
     conformedResult.address = result.vicinity;
     conformedResult.name = result.name;
     conformedResult.rating = result.rating;
-    conformedResult.priceLevel = {price: result.price_level, max: 4};
+    conformedResult.priceLevel = {price: result.price_level || null, max: 4};
   }
 
   if (conformedResult.reviewSite === 'yelp') {
