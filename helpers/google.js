@@ -13,11 +13,12 @@ const convertAddressToCoords = (address) => {
 
 const searchPlacesByCoords = (coords, query) => { //using coords so all the APIs can use it
   //query is something like {type: 'restaurant', keyword:'sushi'}
+  console.log('query inside google search is', query);
   const params = {
     key: apiKey,
     location: `${coords.lat},${coords.lng}`,
     type: query.type,
-    radius: '5000', //default radius for now
+    radius: query.radius, //default radius for now
     keyword: query.keyword
   };
   return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})

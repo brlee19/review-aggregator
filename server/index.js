@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/../client/dist'));
 
 app.post('/search', (req, res) => {
   const userQuery = req.body.data;
-  // console.log('userQuery is', userQuery);
+  console.log('userQuery is', userQuery);
   // closure variables
   let coordinates = '';
   let combinedData = [];
@@ -23,7 +23,7 @@ app.post('/search', (req, res) => {
       return google.searchPlacesByCoords(coords, userQuery); //try util function that searches both g and y
     })
     .then((googleData) => {
-      googleData.sort((a, b) => b.rating - a.rating);
+      googleData.sort((a, b) => b.rating - a.rating); //sort by rating desc
       combinedData = combinedData.concat(apis.conformSearchResults(googleData));
     })
     .then(() => { 
@@ -36,7 +36,7 @@ app.post('/search', (req, res) => {
       res.send(combinedData);
     })
     .then(() => { //chain together any additional API calls that use lat/long
-      console.log('I should probably start adding this data to the DB huh'); //TODO
+      // console.log('I should probably start adding this data to the DB huh'); //TODO
     })
     .catch(err => {
       console.log('err in search is', err);
