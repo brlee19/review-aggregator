@@ -1,4 +1,5 @@
 import React from 'react';
+//component only is aware of yelp info
 
 const overviewStyle = {
 	display: 'inline-block',
@@ -8,11 +9,11 @@ const overviewStyle = {
 	paddingRight: '10px',
 	borderWidth: '1px 1px',
 	borderStyle: 'solid',
-	borderColor: 'rgb(235, 238, 244)',
+	borderColor: 'blue',
 	margin: '5px auto 5px auto',
-	fontFamily: 'Barlow Condensed',
-	fontSize: 'xx-large',
-	textAlign: 'center'
+	fontFamily: 'monospace',
+	fontSize: 'x-large',
+	textAlign: 'left'
 }
 
 class PlaceOverview extends React.Component {
@@ -25,12 +26,19 @@ class PlaceOverview extends React.Component {
 
   render() {
     return(
-      <li style={overviewStyle}>
+      <li style={overviewStyle} onClick={() => this.props.handleClick(this.props.place.id)}>
       <br></br>
-      {this.props.place.name}
+      <strong>{this.props.place.name}</strong>
       <br></br>
-      Yelp Rating: {this.props.place.rating}
+      {this.props.place.display_address}
       <br></br>
+      {this.props.place.display_phone}
+      <br></br>
+      {this.props.place.price}
+      <br></br>
+      Yelp Rating: {this.props.place.rating} from {this.props.place.review_count} reviews
+      <br></br>
+      <a href={this.props.place.url} target="_blank">Go to the Yelp review page!</a>
       </li>
     )
   }

@@ -12,27 +12,15 @@ app.use(express.static(__dirname + '/../client/dist'));
 
 app.post('/search', (req, res) => {
   const userQuery = req.body.data;
-  console.log('userQuery is', userQuery);
-  // closure variables
-  // let coordinates = '';
-  let combinedData = [];
+  // console.log('userQuery is', userQuery);
 
   google.convertAddressToCoords(userQuery.address)
-    // .then((coords) => {
-    //   coordinates = Object.assign({}, coords);
-    //   return google.searchPlacesByCoords(coords, userQuery); //try util function that searches both g and y
-    // })
-    // .then((googleData) => {
-    //   googleData.sort((a, b) => b.rating - a.rating); //sort by rating desc
-    //   combinedData = combinedData.concat(apis.conformSearchResults(googleData));
-    // })
     .then((coords) => { 
       const yelpQuery = yelp.mapQuery(userQuery);
       return yelp.searchPlacesByCoords(coords, yelpQuery);
     })
     .then((yelpData) => {
       yelpData.sort((a, b) => b.rating - a.rating);
-      // combinedData = combinedData.concat(apis.conformSearchResults(yelpData));
       res.send(yelpData);
     })
     .then(() => { //chain together any additional API calls that use lat/long
@@ -42,6 +30,27 @@ app.post('/search', (req, res) => {
       console.log('err in search is', err);
       res.send('sorry, error');
     });
+});
+
+app.post('/details', (req, res) => {
+  const yelpId = req.body.id;
+  const combinedData = {};
+
+  yelp.getReviewExcerpts(yelpId)
+    .then((reviews) => {
+      combinedData.yelpReviews = reviews;
+    })
+    .then(() => {
+      return apis.getGoogleDetailsFromYelpId(yelpId);
+    })
+    .then((googleDetails) => {
+      console.log('google details are', googleDetails);
+      combinedData.googleDetails = googleDetails;
+      // console.log('combinedData is now', combinedData);
+      res.send(combinedData);
+    })
+    // .then(() => res.send('ok'))
+    .catch((err) => console.log('error is', err));
 });
 
 app.get('/testgoogle', (req, res) => {

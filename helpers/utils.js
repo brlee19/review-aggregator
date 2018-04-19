@@ -61,8 +61,7 @@ const getYelpDetailsFromGoogleId = (googleId) => {
 //convert yelp ID to google place details
 const getGoogleDetailsFromYelpId = (yelpId) => {
   return yelp.getDetailsWithId(yelpId)
-    .then((details) => {
-      console.log('details are', details);
+    .then((details) => { //most of these details are already in React state
       const params = {
         location: `${details.coordinates.latitude},${details.coordinates.longitude}`,
         radius: 10, //should be able to be pretty precise given the coordinates from yelp
@@ -70,10 +69,12 @@ const getGoogleDetailsFromYelpId = (yelpId) => {
         keyword: details.name,
         key: googleKey
       };
+      console.log('params inside get Google details are', params);
       return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
     })
     .then(resp => {
-      return resp.data.results; //instead of returning, should check yelp for these same places??
+      // console.log('resp inside get googledeets is', resp.data.results)
+      return resp.data.results;
     })
     .catch(err => console.log(err));
 }
