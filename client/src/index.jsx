@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Link, Switch, History} from "react-rout
 
 import Search from './components/search.jsx';
 import Places from './components/places.jsx';
-import Place from './components/place.jsx';
 
 class App extends React.Component {
 

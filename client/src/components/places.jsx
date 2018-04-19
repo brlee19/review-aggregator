@@ -1,6 +1,10 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import Place from './place.jsx';
+import PlaceOverview from './placeOverview.jsx';
+
+const listStyle = {
+  'listStyleType': 'none'
+}
 
 class Places extends React.Component {
   
@@ -12,9 +16,10 @@ class Places extends React.Component {
   render() {
     return(
       <div>
-        <h1>YOU ARE NOW IN PLACES</h1>
-        <ul>
-        {this.props.location.places.map(place => <Place place={place} key={place.id}/>)}
+        <h1>Click on a card to get more details!</h1>
+        {/*PlaceDetails component would go here...initially blank*/}
+        <ul style={listStyle}>
+        {this.props.location.places.map(place => <PlaceOverview place={place} key={place.id}/>)}
         </ul>
       </div>
     )

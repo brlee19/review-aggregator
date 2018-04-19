@@ -4,7 +4,7 @@ const yelp = require('./yelp.js');
 const yelpToken = require('../config.js').yelp_api_key;
 const googleKey = require('../config.js').google_api_key;
 
-//address converters for converting from google ID to yelp
+//convert google ID to yelp place details
 const extractGoogleAddressComponentLong = (type) => {
   return googleAddress.reduce((result, component) => {
     return (component.types.includes(type)) ? component.long_name : result;
@@ -58,7 +58,7 @@ const getYelpDetailsFromGoogleId = (googleId) => {
 		.catch(err => console.log(err));  
 };
 
-//convert yelp ID to google place
+//convert yelp ID to google place details
 const getGoogleDetailsFromYelpId = (yelpId) => {
   return yelp.getDetailsWithId(yelpId)
     .then((details) => {
@@ -77,6 +77,7 @@ const getGoogleDetailsFromYelpId = (yelpId) => {
     })
     .catch(err => console.log(err));
 }
+
 //review results standardizers
 
 const detectReviewSite = (result) => {

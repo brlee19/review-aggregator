@@ -14,26 +14,26 @@ app.post('/search', (req, res) => {
   const userQuery = req.body.data;
   console.log('userQuery is', userQuery);
   // closure variables
-  let coordinates = '';
+  // let coordinates = '';
   let combinedData = [];
 
   google.convertAddressToCoords(userQuery.address)
-    .then((coords) => {
-      coordinates = Object.assign({}, coords);
-      return google.searchPlacesByCoords(coords, userQuery); //try util function that searches both g and y
-    })
-    .then((googleData) => {
-      googleData.sort((a, b) => b.rating - a.rating); //sort by rating desc
-      combinedData = combinedData.concat(apis.conformSearchResults(googleData));
-    })
-    .then(() => { 
+    // .then((coords) => {
+    //   coordinates = Object.assign({}, coords);
+    //   return google.searchPlacesByCoords(coords, userQuery); //try util function that searches both g and y
+    // })
+    // .then((googleData) => {
+    //   googleData.sort((a, b) => b.rating - a.rating); //sort by rating desc
+    //   combinedData = combinedData.concat(apis.conformSearchResults(googleData));
+    // })
+    .then((coords) => { 
       const yelpQuery = yelp.mapQuery(userQuery);
-      return yelp.searchPlacesByCoords(coordinates, yelpQuery);
+      return yelp.searchPlacesByCoords(coords, yelpQuery);
     })
     .then((yelpData) => {
       yelpData.sort((a, b) => b.rating - a.rating);
-      combinedData = combinedData.concat(apis.conformSearchResults(yelpData));
-      res.send(combinedData);
+      // combinedData = combinedData.concat(apis.conformSearchResults(yelpData));
+      res.send(yelpData);
     })
     .then(() => { //chain together any additional API calls that use lat/long
       // console.log('I should probably start adding this data to the DB huh'); //TODO
