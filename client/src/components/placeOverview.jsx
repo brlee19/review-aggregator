@@ -31,7 +31,8 @@ class PlaceOverview extends React.Component {
             () => this.props.handleClick({
               id: this.props.place.id,
               coordinates: this.props.place.coordinates,
-              name: this.props.place.name
+              name: this.props.place.name,
+              phone: this.props.place.phone
             })
           }
       >

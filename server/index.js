@@ -24,9 +24,9 @@ app.post('/search', (req, res) => {
       yelpData.sort((a, b) => b.rating - a.rating);
       res.send(yelpData);
     })
-    .then(() => { //chain together any additional API calls that use lat/long
-      // console.log('I should probably start adding this data to the DB huh'); //TODO
-    })
+    // .then(() => { //chain together any additional API calls that use lat/long
+    //   // console.log('I should probably start adding this data to the DB huh'); //TODO
+    // })
     .catch(err => {
       console.log('err in search is', err);
       res.send('sorry, error');
@@ -36,21 +36,31 @@ app.post('/search', (req, res) => {
 app.post('/details', (req, res) => {
   const yelpId = req.body.id;
   const name = req.body.name;
+  const phone = req.body.phone;
   const coords = req.body.coordinates;
   const combinedData = {};
 
-  yelp.getReviewExcerpts(yelpId)
+  yelp.getReviewExcerpts(yelpId) //TODO: Promise.all the api calls that don't rely on each other
     .then((reviews) => {
       combinedData.yelpReviews = reviews;
-    })
-    .then(() => {
       return apis.getGoogleDetailsFromYelpData(req.body);
     })
     .then((googleDetails) => {
       combinedData.googleDetails = googleDetails;
-      // console.log('combinedData is now', combinedData);
-      res.send(combinedData);
     })
+    .then(() => {
+      return foursquare.getMatchingPlaceId(coords, {
+        name: name,
+        phone: phone
+      })
+    })
+    .then((foursquareId) => {
+      return foursquare.getPlaceDetails(foursquareId);
+    })
+    .then((foursquareData) => {
+      combinedData.fourSquareDetails = foursquareData;
+    })
+    .then(() => res.send(combinedData))
     // .then(() => res.send('ok'))
     .catch((err) => console.log('error is', err));
 });
