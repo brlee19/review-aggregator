@@ -154,8 +154,6 @@ const conformSearchResults = (results) => {
   return results.map(result => conformSearchResult(result));
 };
 
-//cross reference places from one review site to the other
-
 exports.getYelpDetailsFromGoogleId = getYelpDetailsFromGoogleId;
 exports.convertGoogleAddressToYelp = convertGoogleAddressToYelp;
 exports.conformSearchResults = conformSearchResults;

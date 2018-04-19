@@ -4,10 +4,9 @@ const token = require('../config.js').yelp_api_key;
 const tokenHeader = {'Authorization': 'Bearer ' + token};
 
 const searchPlacesByCoords = (coords, query) => {
-  // const tokenHeader = {'Authorization': 'Bearer ' + token};
   console.log('query inside yelp search is', query);
   const config = {
-    latitude: coords.lat, //to number?
+    latitude: coords.lat,
     longitude: coords.lng,
     radius: Number(query.radius),
     categories: query.categories, //may need to map google to yelp cats, cats are optional for yelp OR just use google for searching and use yelp for reviews
@@ -15,12 +14,7 @@ const searchPlacesByCoords = (coords, query) => {
   };
   return axios.get('https://api.yelp.com/v3/businesses/search', {headers: tokenHeader, params: config})
     .then(resp => {
-      return resp.data.businesses //can make the call to google here if trying to get google info for all
-      //or use the yelpID later to look them up one by one
-      // return {
-      //   places: resp.data.businesses,
-      //   averageRating: getAverageRating(resp.data.businesses)
-      // };
+      return resp.data.businesses
     })
     .catch(err => {
       console.log(err)

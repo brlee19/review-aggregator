@@ -13,8 +13,6 @@ app.use(express.static(__dirname + '/../client/dist'));
 
 app.post('/search', (req, res) => {
   const userQuery = req.body.data;
-  // console.log('userQuery is', userQuery);
-
   google.convertAddressToCoords(userQuery.address)
     .then((coords) => { 
       const yelpQuery = yelp.mapQuery(userQuery);
@@ -24,9 +22,6 @@ app.post('/search', (req, res) => {
       yelpData.sort((a, b) => b.rating - a.rating);
       res.send(yelpData);
     })
-    // .then(() => { //chain together any additional API calls that use lat/long
-    //   // console.log('I should probably start adding this data to the DB huh'); //TODO
-    // })
     .catch(err => {
       console.log('err in search is', err);
       res.send('sorry, error');
@@ -61,7 +56,6 @@ app.post('/details', (req, res) => {
       combinedData.foursquareDetails = foursquareData;
     })
     .then(() => res.send(combinedData))
-    // .then(() => res.send('ok'))
     .catch((err) => console.log('error is', err));
 });
 
