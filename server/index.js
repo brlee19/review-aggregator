@@ -56,5 +56,7 @@ app.get('/testgoogle', (req, res) => {
 });
 
 app.get('/testyelp', (req, res) => {
-
+  apis.getGoogleDetailsFromYelpId('FsuJ7VC5vxX3wcLhFrb97Q')
+    .then((results) => res.send(results[0]))
+    .catch(err => res.send(err))
 });

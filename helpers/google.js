@@ -22,7 +22,7 @@ const searchPlacesByCoords = (coords, query) => { //using coords so all the APIs
   };
   return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
     .then(resp => {
-      return resp.data.results;
+      return resp.data.results; //instead of returning, should check yelp for these same places??
       // BELOW WILL TRY TO GET AVERAGE RATING BUT IT DOESNT SEEM SUPER USEFUL
       // return {
       //   places: resp.data.results,

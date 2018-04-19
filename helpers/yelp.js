@@ -1,8 +1,10 @@
 const axios = require('axios');
 const token = require('../config.js').yelp_api_key;
 
+const tokenHeader = {'Authorization': 'Bearer ' + token};
+
 const searchPlacesByCoords = (coords, query) => {
-  const tokenHeader = {'Authorization': 'Bearer ' + token};
+  // const tokenHeader = {'Authorization': 'Bearer ' + token};
   const config = {
     latitude: coords.lat, //to number?
     longitude: coords.lng,
@@ -12,7 +14,8 @@ const searchPlacesByCoords = (coords, query) => {
   };
   return axios.get('https://api.yelp.com/v3/businesses/search', {headers: tokenHeader, params: config})
     .then(resp => {
-      return resp.data.businesses
+      return resp.data.businesses //can make the call to google here if trying to get google info for all
+      //or use the yelpID later to look them up one by one
       // return {
       //   places: resp.data.businesses,
       //   averageRating: getAverageRating(resp.data.businesses)
@@ -22,6 +25,18 @@ const searchPlacesByCoords = (coords, query) => {
       console.log(err)
     })
 };
+
+const getDetailsWithId = (yelpId) => { //not sure this has any additional details
+  return axios.get(`https://api.yelp.com/v3/businesses/${yelpId}`, {headers: tokenHeader})
+    .then(resp => resp.data)
+    .catch(err => {console.log(err)})
+}
+
+const getReviewExcerpts = (yelpId) => {
+  return axios.get(`https://api.yelp.com/v3/businesses/${yelpId}/reviews`, {headers: tokenHeader})
+    .then(resp => resp.data.reviews)
+    .catch(err => {console.log(err)})
+}
 
 const getAverageRating = (places) => { //same as yelp but different from foursquare
   const totalRatings = places.reduce((ratings, place) => {
@@ -44,3 +59,5 @@ const convertReactQueryForApi = (userQuery) => {
 
 exports.searchPlacesByCoords = searchPlacesByCoords;
 exports.mapQuery = convertReactQueryForApi;
+exports.getDetailsWithId = getDetailsWithId;
+exports.getReviewExcerpts = getReviewExcerpts;
