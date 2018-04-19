@@ -40,7 +40,7 @@ class PlaceOverview extends React.Component {
       <pre>{/*JSON.stringify(this.props.place)*/}</pre>
       <strong>{this.props.place.name}</strong>
       <br></br>
-      {this.props.place.display_address}
+      {this.props.place.location.display_address.join(', ')}
       <br></br>
       {this.props.place.display_phone}
       <br></br>

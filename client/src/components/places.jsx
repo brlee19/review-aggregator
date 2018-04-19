@@ -47,7 +47,7 @@ class Places extends React.Component {
   render() {
     return(
       <div>
-        <h1>Click on a card to get more details!</h1>
+        {this.state.baseData ? <div></div> : <h1>Click on a card to get more details!</h1>}
         <pre>{JSON.stringify(this.state)}</pre>
         {/*PlaceDetails component would go here...only render if state not blank*/}
         <PlaceDetails place={this.state}/>
