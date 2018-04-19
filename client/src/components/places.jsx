@@ -13,15 +13,32 @@ class Places extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedPlace: ''
+      baseData: '', //base yelp of the selected place
+      yelpReviews: '',
+      google: '',
+      foursquare: ''
     };
     this.getDetails = this.getDetails.bind(this);
   }
 
   getDetails(placeData) {
-    // console.log('placeData', placeData);
     axios.post('/details', placeData)
-      .then((resp) => console.log(resp))
+      .then((resp) => {
+        // console.log(resp.data);
+        const selectedPlace = this.props.location.places.filter(place => place.id === placeData.id)[0];
+        console.log({
+          baseData: selectedPlace,
+          yelpReviews: resp.data.yelpReviews,
+          google: resp.data.googleDetails,
+          foursquare: resp.data.foursquareDetails
+        });
+        this.setState({
+          baseData: selectedPlace,
+          yelpReviews: resp.data.yelpReviews,
+          google: resp.data.googleDetails,
+          foursquare: resp.data.foursquareDetails
+        });
+      })
       .catch((err) => console.log(err)); 
   }
 
@@ -31,8 +48,9 @@ class Places extends React.Component {
     return(
       <div>
         <h1>Click on a card to get more details!</h1>
+        <pre>{JSON.stringify(this.state)}</pre>
         {/*PlaceDetails component would go here...only render if state not blank*/}
-        <PlaceDetails place={this.state.selectedPlace}/>
+        <PlaceDetails place={this.state}/>
         <ul style={listStyle}>
         {this.props.location.places.map(place => {
           return <PlaceOverview place={place} key={place.id} handleClick={this.getDetails}/>

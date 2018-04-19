@@ -58,7 +58,7 @@ app.post('/details', (req, res) => {
       return foursquare.getPlaceDetails(foursquareId);
     })
     .then((foursquareData) => {
-      combinedData.fourSquareDetails = foursquareData;
+      combinedData.foursquareDetails = foursquareData;
     })
     .then(() => res.send(combinedData))
     // .then(() => res.send('ok'))

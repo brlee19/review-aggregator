@@ -30,7 +30,7 @@ class Search extends React.Component {
           places: resp.data,
           userQuery: this.state
         });
-        console.log(resp);
+        // console.log(resp);
       }) //need to reach router or otherwise get to the reviews page
       .catch((err) => console.log(err));
   }

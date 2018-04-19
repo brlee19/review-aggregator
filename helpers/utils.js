@@ -90,7 +90,7 @@ const getGoogleDetailsFromYelpData = (yelpData) => {
   };
   return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
     .then(resp => {
-      return resp.data.results;
+      return resp.data.results[0];
     })
     .catch(err => console.log(err));
 }
