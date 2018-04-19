@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const google = require('../helpers/google.js');
 const yelp = require('../helpers/yelp.js');
+const foursquare = require('../helpers/foursquare.js');
 const apis = require('../helpers/utils.js');
 const port = 3000;
 
@@ -69,4 +70,13 @@ app.get('/testyelp', (req, res) => {
   apis.getGoogleDetailsFromYelpId('FsuJ7VC5vxX3wcLhFrb97Q')
     .then((results) => res.send(results[0]))
     .catch(err => res.send(err))
+});
+
+app.get('/testfoursquare', (req, res) => {
+  const coordinates = {
+    latitude: 40.74662,
+    longitude: -73.98539
+  };
+  const query = 'korean';
+  foursquare.getNearbyPlaces(coordinates, query);
 });
