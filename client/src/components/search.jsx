@@ -1,6 +1,7 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 import axios from 'axios';
+// import Places from './places.jsx';
 
 class Search extends React.Component {
   
@@ -23,7 +24,14 @@ class Search extends React.Component {
 
   search() {
     axios.post('/search', {data: this.state})
-      .then((resp) => console.log(resp)) //need to reach router or otherwise get to the reviews page
+      .then((resp) => {
+        this.props.history.push({
+          pathname: '/places',
+          places: resp.data,
+          userQuery: this.state
+        });
+        console.log(resp);
+      }) //need to reach router or otherwise get to the reviews page
       .catch((err) => console.log(err));
   }
 

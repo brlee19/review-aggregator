@@ -23,6 +23,7 @@ app.post('/search', (req, res) => {
       return google.searchPlacesByCoords(coords, userQuery); //try util function that searches both g and y
     })
     .then((googleData) => {
+      googleData.sort((a, b) => b.rating - a.rating);
       combinedData = combinedData.concat(apis.conformSearchResults(googleData));
     })
     .then(() => { 
@@ -30,6 +31,7 @@ app.post('/search', (req, res) => {
       return yelp.searchPlacesByCoords(coordinates, yelpQuery);
     })
     .then((yelpData) => {
+      yelpData.sort((a, b) => b.rating - a.rating);
       combinedData = combinedData.concat(apis.conformSearchResults(yelpData));
       res.send(combinedData);
     })

@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link, Switch, History} from "react-router-dom";
+
 import Search from './components/search.jsx';
+import Places from './components/places.jsx';
+import Place from './components/place.jsx';
 
 class App extends React.Component {
 
@@ -11,13 +14,12 @@ class App extends React.Component {
 
   render () {
     return (
-      <div>
         <Router>
         <Switch>
-            <Search path="/" component={Search}/>
+            <Search exact path="/" component={Search}/>
+            <Places path="/places" component={Places}/>
         </Switch>
         </Router> 
-      </div>
       )
    }
 }

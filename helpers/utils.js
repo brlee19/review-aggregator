@@ -68,6 +68,8 @@ const detectReviewSite = (result) => {
 }
 
 const conformSearchResult = (result) => { //type should still be in react state
+  //instead of conforming, consider creating a new search result with info from G, Y, and 4
+  //for example, FourSquare has menu links and tips
   let conformedResult = {
     reviewSite: detectReviewSite(result),
     id: null,
