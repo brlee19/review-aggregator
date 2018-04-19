@@ -58,7 +58,7 @@ const getYelpDetailsFromGoogleId = (googleId) => {
 		.catch(err => console.log(err));  
 };
 
-//convert yelp ID to google place details
+//convert yelp ID to google place details, not sure this id lookup is necessary
 const getGoogleDetailsFromYelpId = (yelpId) => {
   return yelp.getDetailsWithId(yelpId)
     .then((details) => { //most of these details are already in React state
@@ -69,7 +69,7 @@ const getGoogleDetailsFromYelpId = (yelpId) => {
         keyword: details.name,
         key: googleKey
       };
-      console.log('params inside get Google details are', params);
+      // console.log('params inside get Google details are', params);
       return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
     })
     .then(resp => {
@@ -79,6 +79,21 @@ const getGoogleDetailsFromYelpId = (yelpId) => {
     .catch(err => console.log(err));
 }
 
+//this version skips another yelp API call since yelpData is available from the client
+const getGoogleDetailsFromYelpData = (yelpData) => {
+  const params = {
+    location: `${yelpData.coordinates.latitude},${yelpData.coordinates.longitude}`,
+    radius: 10, //should be able to be pretty precise given the coordinates from yelp
+    type: 'restaurant', //hardcoded for now
+    keyword: yelpData.name,
+    key: googleKey
+  };
+  return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
+    .then(resp => {
+      return resp.data.results;
+    })
+    .catch(err => console.log(err));
+}
 //review results standardizers
 
 const detectReviewSite = (result) => {
@@ -145,3 +160,4 @@ exports.getYelpDetailsFromGoogleId = getYelpDetailsFromGoogleId;
 exports.convertGoogleAddressToYelp = convertGoogleAddressToYelp;
 exports.conformSearchResults = conformSearchResults;
 exports.getGoogleDetailsFromYelpId = getGoogleDetailsFromYelpId;
+exports.getGoogleDetailsFromYelpData = getGoogleDetailsFromYelpData;

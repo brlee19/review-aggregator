@@ -18,9 +18,9 @@ class Places extends React.Component {
     this.getDetails = this.getDetails.bind(this);
   }
 
-  getDetails(yelpId) {
-    console.log('yelpId is', yelpId);
-    axios.post('/details', {id: yelpId})
+  getDetails(placeData) {
+    // console.log('placeData', placeData);
+    axios.post('/details', placeData)
       .then((resp) => console.log(resp))
       .catch((err) => console.log(err)); 
   }

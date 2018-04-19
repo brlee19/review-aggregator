@@ -34,6 +34,8 @@ app.post('/search', (req, res) => {
 
 app.post('/details', (req, res) => {
   const yelpId = req.body.id;
+  const name = req.body.name;
+  const coords = req.body.coordinates;
   const combinedData = {};
 
   yelp.getReviewExcerpts(yelpId)
@@ -41,10 +43,9 @@ app.post('/details', (req, res) => {
       combinedData.yelpReviews = reviews;
     })
     .then(() => {
-      return apis.getGoogleDetailsFromYelpId(yelpId);
+      return apis.getGoogleDetailsFromYelpData(req.body);
     })
     .then((googleDetails) => {
-      console.log('google details are', googleDetails);
       combinedData.googleDetails = googleDetails;
       // console.log('combinedData is now', combinedData);
       res.send(combinedData);

@@ -26,8 +26,17 @@ class PlaceOverview extends React.Component {
 
   render() {
     return(
-      <li style={overviewStyle} onClick={() => this.props.handleClick(this.props.place.id)}>
+      <li style={overviewStyle}
+          onClick={
+            () => this.props.handleClick({
+              id: this.props.place.id,
+              coordinates: this.props.place.coordinates,
+              name: this.props.place.name
+            })
+          }
+      >
       <br></br>
+      <pre>{/*JSON.stringify(this.props.place)*/}</pre>
       <strong>{this.props.place.name}</strong>
       <br></br>
       {this.props.place.display_address}
