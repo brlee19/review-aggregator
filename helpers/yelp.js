@@ -12,10 +12,11 @@ const searchPlacesByCoords = (coords, query) => {
   };
   return axios.get('https://api.yelp.com/v3/businesses/search', {headers: tokenHeader, params: config})
     .then(resp => {
-      return {
-        places: resp.data.businesses,
-        averageRating: getAverageRating(resp.data.businesses)
-      };
+      return resp.data.businesses
+      // return {
+      //   places: resp.data.businesses,
+      //   averageRating: getAverageRating(resp.data.businesses)
+      // };
     })
     .catch(err => {
       console.log(err)

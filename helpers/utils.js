@@ -58,5 +58,62 @@ const convertGoogleAddressToYelp = (googleAddress) => {
   };
 };
 
+const detectReviewSite = (result) => {
+  if (result.hasOwnProperty('place_id') || result.hasOwnProperty('geometry')) return 'google';
+  else if (result.hasOwnProperty('alias') || result.hasOwnProperty('alias')) return 'yelp';
+  else throw 'Unable to conform search result, are you sure it\'s a yelp or google result?'
+}
+
+const conformSearchResult = (result) => { //type should still be in react state
+  let conformedResult = {
+    reviewSite: detectReviewSite(result),
+    id: null,
+    lat: null,
+    long: null,
+    address: null,
+    name: null,
+    phoneNumber: null,
+    imageUrl: null,
+    reviewUrl: null,
+    rating: null,
+    reviewCount: null,
+    priceLevel: {price: null, max: null},
+  }
+
+  if (conformedResult.reviewSite === 'google') {
+    conformedResult.id = result.place_id;
+    conformedResult.lat = result.geometry.location.lat;
+    conformedResult.long = result.geometry.location.lng;
+    conformedResult.address = result.vicinity;
+    conformedResult.name = result.name;
+    conformedResult.rating = result.rating;
+    conformedResult.priceLevel = {price: result.price_level, max: 4};
+  }
+
+  if (conformedResult.reviewSite === 'yelp') {
+    conformedResult.id = result.id;
+    conformedResult.lat = result.coordinates.latitude;
+    conformedResult.long = result.coordinates.longitude;
+    conformedResult.address = result.location.display_address.join(', ');
+    conformedResult.name = result.name;
+    conformedResult.phoneNumber = result.display_phone;
+    conformedResult.imageUrl = result.image_url;
+    conformedResult.reviewUrl = result.url;
+    conformedResult.rating = result.rating;
+    conformedResult.reviewCount = result.review_count;
+    conformedResult.priceLevel = {
+      price: result.price ? result.price.length : 'n/a',
+      max: 4
+    };
+  }
+  //add other possibilities here
+  return conformedResult;
+}
+
+const conformSearchResults = (results) => {
+  return results.map(result => conformSearchResult(result));
+}
+
 exports.getYelpDetailsFromGoogleId = getYelpDetailsFromGoogleId;
 exports.convertGoogleAddressToYelp = convertGoogleAddressToYelp;
+exports.conformSearchResults = conformSearchResults;

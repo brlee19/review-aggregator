@@ -22,10 +22,12 @@ const searchPlacesByCoords = (coords, query) => { //using coords so all the APIs
   };
   return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
     .then(resp => {
-      return {
-        places: resp.data.results,
-        averageRating: getAverageRating(resp.data.results)
-      }
+      return resp.data.results;
+      // BELOW WILL TRY TO GET AVERAGE RATING BUT IT DOESNT SEEM SUPER USEFUL
+      // return {
+      //   places: resp.data.results,
+      //   averageRating: getAverageRating(resp.data.results)
+      // }
     })
     .catch(err => console.log(err));
 };
