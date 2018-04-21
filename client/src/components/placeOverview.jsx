@@ -20,8 +20,6 @@ class PlaceOverview extends React.Component {
   
   constructor(props) {
     super(props);
-    // this.state = {}; this.props.location.places would be the places
-    // this.getLiStyle = this.getLiStyle.bind(this);
   }
 
   render() {

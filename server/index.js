@@ -29,58 +29,20 @@ app.post('/search', (req, res) => {
 });
 
 app.post('/details', (req, res) => {
-  const yelpId = req.body.id;
-  const name = req.body.name;
-  const phone = req.body.phone;
-  const coords = req.body.coordinates;
-  const combinedData = {};
+  const {id, name, phone, coordinates} = req.body;
+  const combinedData = {}; //closure variable
 
-  yelp.getReviewExcerpts(yelpId) //TODO: Promise.all the api calls that don't rely on each other
-    .then((reviews) => {
-      combinedData.yelpReviews = reviews;
-      return apis.getGoogleDetailsFromYelpData(req.body);
-    })
-    .then((googleDetails) => {
-      combinedData.googleDetails = googleDetails;
-    })
-    .then(() => {
-      return foursquare.getMatchingPlaceId(coords, {
-        name: name,
-        phone: phone
-      })
-    })
-    .then((foursquareId) => {
-      return foursquare.getPlaceDetails(foursquareId);
-    })
-    .then((foursquareData) => {
-      combinedData.foursquareDetails = foursquareData;
-    })
+  const yelpPromise = yelp.getReviewExcerpts(id)
+                          .then(reviews => combinedData.yelpReviews = reviews);
+
+  const googlePromise = apis.getGoogleDetailsFromYelpData(req.body)
+                            .then(googleDetails => combinedData.googleDetails = googleDetails);
+
+  const foursquarePromise = foursquare.getMatchingPlaceId(coordinates, {name: name, phone: phone})
+                                      .then(foursquareId => foursquare.getPlaceDetails(foursquareId))
+                                      .then(foursquareData => combinedData.foursquareDetails = foursquareData);
+
+  Promise.all([yelpPromise, googlePromise, foursquarePromise])
     .then(() => res.send(combinedData))
     .catch((err) => console.log('error is', err));
-});
-
-app.get('/testgoogle', (req, res) => {
-  google.convertAddressToCoords('350 E 30th Street, New York NY')
-    .then((coords) => {
-      coordinates = Object.assign({}, coords);
-      return google.searchPlacesByCoords(coords, {type: 'restaurant'}); //try util function that searches both g and y
-    })
-    .then((googleData) => {
-      res.send(googleData.places[0]);
-    })
-});
-
-app.get('/testyelp', (req, res) => {
-  apis.getGoogleDetailsFromYelpId('FsuJ7VC5vxX3wcLhFrb97Q')
-    .then((results) => res.send(results[0]))
-    .catch(err => res.send(err))
-});
-
-app.get('/testfoursquare', (req, res) => {
-  const coordinates = {
-    latitude: 40.74662,
-    longitude: -73.98539
-  };
-  const query = 'korean';
-  foursquare.getNearbyPlaces(coordinates, query);
 });

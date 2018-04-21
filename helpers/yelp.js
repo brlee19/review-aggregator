@@ -4,7 +4,7 @@ const token = require('../config.js').yelp_api_key;
 const tokenHeader = {'Authorization': 'Bearer ' + token};
 
 const searchPlacesByCoords = (coords, query) => {
-  console.log('query inside yelp search is', query);
+  // console.log('query inside yelp search is', query);
   const config = {
     latitude: coords.lat,
     longitude: coords.lng,
