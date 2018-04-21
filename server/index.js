@@ -76,10 +76,13 @@ app.post('/details', (req, res) => {
     .catch(err => console.log(err));
 });
 
-app.get('/testdb', (req, res) => {
+app.get('/__testdb', (req, res) => {
   // db.addIds({yelp: 'testYelp', google:'testGoogle', foursquare:'testFoursquare'})
   //   .then((res) => console.log(res));
-  db.getIdsByYelpId('testYelp')
-    .then(res => console.log(res.rows[0].google))
-    .catch(err => console.log(err));
+  // db.getIdsByYelpId('testYelp')
+  //   .then(res => console.log(res.rows[0].google))
+  //   .catch(err => console.log(err));
+  db.reset()
+    .then(resp => res.send('db reset'))
+    .catch(err => res.send(err))
 })
