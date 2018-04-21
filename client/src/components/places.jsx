@@ -42,18 +42,16 @@ class Places extends React.Component {
       .catch((err) => console.log(err)); 
   }
 
-  //give placeOverview a clickHandler that changes the selectedPlace and makes the axios call
-
   render() {
     return(
       <div>
-        {this.state.baseData ? <div></div> : <h1>Click on a card to get more details!</h1>}
-        <pre>{JSON.stringify(this.state)}</pre>
-        {/*PlaceDetails component would go here...only render if state not blank*/}
-        <PlaceDetails place={this.state}/>
+        {this.state.baseData ? <div></div> : <h1>Click on a card to get all the details!</h1>}
+        <pre>{/*JSON.stringify(this.state)*/}</pre>
         <ul style={listStyle}>
         {this.props.location.places.map(place => {
-          return <PlaceOverview place={place} key={place.id} handleClick={this.getDetails}/>
+          return place.id === this.state.baseData.id ? ( /* checking to see if this place has been selected */
+            <PlaceDetails place={this.state} key={place.id}/>) : (  
+            <PlaceOverview place={place} key={place.id} handleClick={this.getDetails}/>)
         })}
         </ul>
       </div>

@@ -1,6 +1,8 @@
 import React from 'react';
 
 const detailsStyle = {
+  display: 'inline-block',
+  width: '100%',
 	borderWidth: '1px 1px',
 	borderStyle: 'solid',
 	borderColor: 'green',
@@ -26,9 +28,8 @@ class PlaceDetails extends React.Component {
   }
 
   render() {
-    return this.props.place.baseData ? 
-    (
-      <div style={detailsStyle}>
+    return (
+      <li style={detailsStyle}>
         <pre>{}</pre>
         <h2>{this.props.place.baseData.name}</h2>
         <img src={this.props.place.foursquare.bestPhoto.prefix +
@@ -84,10 +85,7 @@ class PlaceDetails extends React.Component {
                     <a href={review.url} target="_blank">Read the full review</a>
                   </div>)
         })}
-      </div>
-    ) :
-    (
-      <div></div>
+      </li>
     )
   }
 

@@ -39,7 +39,7 @@ class Search extends React.Component {
     return(
       <div>
         <h2>SEARCH COMPONENT</h2>
-        <pre>{JSON.stringify(this.state)}</pre>
+        {/*<pre>{JSON.stringify(this.state)}</pre>*/}
 
         <select name="type" onChange={this.handleChange}>
           <option value="restaurant">Restaurants</option>
@@ -55,7 +55,7 @@ class Search extends React.Component {
           <option value="500" type="number">500 meters</option>
           <option value="1000" type="number">1000 meters</option>
           <option value="10000" type="number">10 km</option>
-          <option value="50000" type="number">50 km</option>
+          <option value="40000" type="number">40 km</option>
         </select>
 
         <button onClick={this.search}>Search!</button>
