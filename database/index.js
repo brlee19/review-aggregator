@@ -23,12 +23,15 @@ const getIdsByYelpId = (yelpId) => {
 }
 
 const addIds = (ids) => { //ids is an object with yelp, google, and foursquare keys
-  const queryStr = `insert into review_site_ids(yelp, google, foursquare) values ($1, $2, $3)`;
+  const queryStr = `insert into review_site_ids(yelp, google, foursquare) values ($1, $2, $3)\
+                    on conflict (yelp) do nothing`;
   const values = [ids.yelp, ids.google, ids.foursquare];
   return pool.query(queryStr, values)
     .then(res => console.log(res))
     .catch(err => console.log(err));
 }
+
+//TODO: DB should update IDs if the last check was over a week ago or there is an error
 
 exports.getAllIds = getAllIds;
 exports.getIdsByYelpId = getIdsByYelpId;
