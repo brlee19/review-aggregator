@@ -5,7 +5,8 @@ const pool = new Pool({
   user: config.db_user,
   host: config.db_host,
   database: config.database,
-  port: config.db_port
+  port: config.db_port,
+  password: config.db_password
 });
 
 const getAllIds = () => {

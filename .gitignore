@@ -6,6 +6,5 @@ client/src/.DS_Store
 .DS_Store
 
 build/
-react-client/dist/bundle.js
 config.js
 package-lock.json
