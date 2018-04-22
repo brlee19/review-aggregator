@@ -1,4 +1,5 @@
 const organizePlacesData = ({foursquareDetails, googleDetails, yelp}) => {
+  //organized data from APIs
   const reviewSiteData = { //functions will return undefined if foursquareDetails, etc. are missing
     name: getProp(yelp, 'name'),
     address: getAddress(yelp),
@@ -25,7 +26,10 @@ const organizePlacesData = ({foursquareDetails, googleDetails, yelp}) => {
     yelpRating: getProp(yelp, 'rating'),
   };
 
+  //new calculations based on API data
   reviewSiteData.averageRating = calculateAverageReview(reviewSiteData);
+  reviewSiteData.averagePrice = calculateAveragePrice(reviewSiteData);
+  reviewSiteData.ratingToPrice = calculateRatingToPrice(reviewSiteData);
 
   return reviewSiteData;
 };
@@ -89,7 +93,19 @@ const calculateAverageReview = ({googleRating, foursquareRating, yelpRating}) =>
   const avgRating = ratings.reduce((accum, rating) => {
     return accum + rating
   }, 0) / ratings.length;
-  return avgRating.toFixed(1);
+  return Number(avgRating.toFixed(1));
 };
+
+const calculateAveragePrice = ({googlePrice, foursquarePrice, yelpPrice}) => {
+  const prices = [googlePrice, foursquarePrice, yelpPrice].filter(price => !!price);
+  const avgPrice = prices.reduce((accum, price) => {
+    return accum + price;
+  }, 0) / prices.length;
+  return Number(avgPrice.toFixed(1));
+};
+
+const calculateRatingToPrice = ({averageRating, averagePrice}) => {
+  return Number((averageRating / averagePrice).toFixed(1));
+}
 
 exports.organizePlacesData = organizePlacesData;
