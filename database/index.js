@@ -19,8 +19,8 @@ const getIdsByYelpId = (yelpId) => {
   const queryStr = `select * from review_site_ids where yelp = $1`;
   const values = [yelpId];
   return pool.query(queryStr, values)
-    .then(res => console.log(res))
-    // .then(res => res.rows[0])
+    // .then(res => console.log(res))
+    .then(res => res.rows[0])
     .catch(err => console.log(err));
 };
 
@@ -29,7 +29,7 @@ const addIds = (ids) => { //ids is an object with yelp, google, and foursquare k
                     on conflict (yelp) do nothing`;
   const values = [ids.yelp, ids.google, ids.foursquare];
   return pool.query(queryStr, values)
-    .then(res => console.log(res))
+    // .then(res => console.log(res))
     .catch(err => console.log(err));
 };
 
@@ -41,7 +41,7 @@ const reset = () => {
                     foursquare varchar(140) unique,
                     primary key(yelp));`
   return pool.query(queryStr)
-    .then(res => console.log(res))
+    // .then(res => console.log(res))
     .catch(err => console.log(err));
 }
 

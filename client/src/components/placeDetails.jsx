@@ -10,7 +10,7 @@ const detailsStyle = {
 	fontFamily: 'Monospace',
 	fontSize: 'xx-large',
 	textAlign: 'left'
-}
+};
 
 const smaller = {
 	margin: '5px auto 5px auto',
@@ -18,9 +18,9 @@ const smaller = {
 	fontSize: 'large',
   textAlign: 'left',
   color: 'blue'
-}
+};
 
-class PlaceDetails extends React.Component {
+class PlaceDetails extends React.Component { //change to stateless component
   
   constructor(props) { //need to render a lot of details based on whether the details exist
     super(props);
@@ -32,6 +32,7 @@ class PlaceDetails extends React.Component {
       <li style={detailsStyle}>
         <pre>{}</pre>
         <h2>{this.props.place.baseData.name}</h2>
+        <div style={smaller}>{this.props.place.foursquare.description}</div>
         <img src={this.props.place.foursquare.bestPhoto.prefix +
                    '480x280' +
                    this.props.place.foursquare.bestPhoto.suffix}>

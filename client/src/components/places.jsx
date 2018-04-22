@@ -13,7 +13,7 @@ class Places extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      baseData: '', //base yelp of the selected place
+      baseData: '', //base yelp data of the selected place
       yelpReviews: '',
       google: '',
       foursquare: ''
@@ -22,18 +22,18 @@ class Places extends React.Component {
   }
 
   getDetails(placeData) {
-    axios.post('/details', placeData)
+    axios.post('/details', placeData) //now sending entire place data to server
       .then((resp) => {
         // console.log(resp.data);
         const selectedPlace = this.props.location.places.filter(place => place.id === placeData.id)[0];
         console.log({
-          baseData: selectedPlace,
+          yelpOGData: placeData,
           yelpReviews: resp.data.yelpReviews,
           google: resp.data.googleDetails,
           foursquare: resp.data.foursquareDetails
         });
         this.setState({
-          baseData: selectedPlace,
+          baseData: placeData,
           yelpReviews: resp.data.yelpReviews,
           google: resp.data.googleDetails,
           foursquare: resp.data.foursquareDetails

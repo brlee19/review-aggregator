@@ -30,21 +30,19 @@ class Search extends React.Component {
           places: resp.data,
           userQuery: this.state
         });
-        // console.log(resp);
-      }) //need to reach router or otherwise get to the reviews page
+      })
       .catch((err) => console.log(err));
   }
 
   render() {
     return(
       <div>
-        <h2>SEARCH COMPONENT</h2>
-        {/*<pre>{JSON.stringify(this.state)}</pre>*/}
+        <h2>Search for reviews!</h2>
 
         <select name="type" onChange={this.handleChange}>
           <option value="restaurant">Restaurants</option>
-          <option value="restaurant">Hotels</option>
-          <option value="restaurant">You can only pick restaurant right now</option>
+          <option value="restaurant">Hotels--coming soon!</option>
+          <option value="restaurant">This menu actually picks restaurants no matter what you actually pick</option>
         </select>
 
         <input size="42" name="keyword" placeholder='Enter details for your search, like "sushi"' onChange={this.handleChange}/>

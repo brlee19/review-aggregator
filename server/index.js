@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const google = require('../helpers/google.js');
 const yelp = require('../helpers/yelp.js');
 const foursquare = require('../helpers/foursquare.js');
-const apis = require('../helpers/utils.js');
+const apis = require('../helpers/apis.js');
+const utils = require('../helpers/utils.js');
 const db = require('../database/index.js');
 
 const app = express();
@@ -25,17 +26,22 @@ app.post('/search', (req, res) => {
       res.send(yelpData);
     })
     .catch(err => {
-      console.log('err in search is', err);
+      console.log('err in yelp search is', err);
       res.send('sorry, error');
     });
 });
 
 app.post('/details', (req, res) => {
+  console.log('req.body is', req.body);
   const {id, name, phone, coordinates} = req.body;
   const combinedData = {}; //closure variable to house all the data sent back to client
+  combinedData.yelp = req.body;
 
   const yelpPromise = yelp.getReviewExcerpts(id) //this promise will be the same regardless of db contents
-    .then(reviews => combinedData.yelpReviews = reviews);
+    .then(reviews => {
+      combinedData.yelpReviews = reviews; //delete this eventually
+      combinedData.yelp.reviews = reviews;
+    });
 
   let reviewSitePromises = [yelpPromise]; //use Promise.all once this is filled in with google and foursquare
   db.getIdsByYelpId(id)
@@ -61,7 +67,10 @@ app.post('/details', (req, res) => {
     .then(() => {
       // console.log('review site promises are', reviewSitePromises);
       Promise.all(reviewSitePromises)
-      .then(() => res.send(combinedData))
+      .then(() => {
+        console.log('organized place data is', utils.organizePlacesData(combinedData));
+        res.send(combinedData);
+      })
       .then(() => { //save ids to db if they aren't already there
         const combinedIds = {yelp: id,
                              google: combinedData.googleDetails.place_id,

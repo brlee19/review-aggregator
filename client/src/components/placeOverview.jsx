@@ -26,12 +26,7 @@ class PlaceOverview extends React.Component {
     return(
       <li style={overviewStyle}
           onClick={
-            () => this.props.handleClick({
-              id: this.props.place.id,
-              coordinates: this.props.place.coordinates,
-              name: this.props.place.name,
-              phone: this.props.place.phone
-            })
+            () => this.props.handleClick(this.props.place)
           }
       >
       <br></br>
