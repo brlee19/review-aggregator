@@ -1,8 +1,8 @@
 const axios = require('axios');
 const google = require('./google.js');
 const yelp = require('./yelp.js');
-const yelpToken = require('../config.js').yelp_api_key;
-const googleKey = require('../config.js').google_api_key;
+const yelpToken = process.env.yelp_api_key || require('../config.js').yelp_api_key;
+const googleKey = process.env.google_api_key || require('../config.js').google_api_key;
 
 //convert google ID to yelp place details
 const extractGoogleAddressComponentLong = (type) => {

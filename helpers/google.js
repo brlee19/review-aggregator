@@ -1,5 +1,5 @@
 const axios = require('axios');
-const apiKey = require('../config.js').google_api_key;
+const apiKey = process.env.google_api_key || require('../config.js').google_api_key;
 
 //google
 const convertAddressToCoords = (address) => {

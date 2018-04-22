@@ -8,7 +8,7 @@ const apis = require('../helpers/utils.js');
 const db = require('../database/index.js');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`listening on port ${port}!`));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));

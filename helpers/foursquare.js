@@ -1,5 +1,5 @@
-const id = require('../config.js').foursquare_id;
-const secret = require('../config.js').foursquare_secret;
+const id = process.env.foursquare_id || require('../config.js').foursquare_id;
+const secret = process.env.foursquare_secret || require('../config.js').foursquare_secret;
 const axios = require('axios');
 const request = require('request');
 

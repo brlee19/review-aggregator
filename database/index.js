@@ -1,12 +1,11 @@
 const {Pool, Client} = require('pg');
-const config = require('../config.js');
 
 const pool = new Pool({
-  user: config.db_user,
-  host: config.db_host,
-  database: config.database,
-  port: config.db_port,
-  password: config.db_password
+  user: process.env.db_user || require('../config.js').db_user,
+  host: process.env.host || require('../config.js').db_host,
+  database: process.env.database || require('../config.js').database,
+  port: process.env.db_port || require('../config.js').db_port,
+  password: process.env.password || require('../config.js').db_password
 });
 
 const getAllIds = () => {
