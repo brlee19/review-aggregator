@@ -4,6 +4,7 @@
   "description": "Aggregage place reviews from multiple review sites",
   "main": "server/index.js",
   "scripts": {
+    "start": "nodemon server/index.js", 
     "server-dev": "nodemon server/index.js",
     "react-dev": "webpack -d --watch"
   },
