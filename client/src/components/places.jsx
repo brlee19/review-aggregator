@@ -46,7 +46,7 @@ class Places extends React.Component {
     return(
       <div>
         {this.state.baseData ? <div></div> : <h1>Click on a card to get all the details!</h1>}
-        <pre>{/*JSON.stringify(this.state)*/}</pre>
+        <pre>{JSON.stringify(this.props.location.places)}</pre>
         <ul style={listStyle}>
         {this.props.location.places.map(place => {
           return place.id === this.state.baseData.id ? ( /* checking to see if this place has been selected */

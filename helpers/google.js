@@ -4,8 +4,10 @@ const apiKey = process.env.google_api_key || require('../config.js').google_api_
 //google
 const convertAddressToCoords = (address) => {
   const params = {address: address, key: apiKey};
+  console.log('apikey is', apiKey);
   return axios.get('https://maps.googleapis.com/maps/api/geocode/json?', {params: params})
     .then(resp => {
+      console.log('response from google is', resp);
       return resp.data.results[0].geometry.location;
     })
     .catch(err => console.log('err trying to get lat/lon from google:', err)) //not sure if this needs to be here or should just be chained
