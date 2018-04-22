@@ -20,7 +20,8 @@ const getIdsByYelpId = (yelpId) => {
   const queryStr = `select * from review_site_ids where yelp = $1`;
   const values = [yelpId];
   return pool.query(queryStr, values)
-    .then(res => res.rows[0])
+    .then(res => console.log(res))
+    // .then(res => res.rows[0])
     .catch(err => console.log(err));
 };
 
