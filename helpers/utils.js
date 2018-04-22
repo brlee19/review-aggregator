@@ -14,21 +14,25 @@ const organizePlacesData = ({foursquareDetails, googleDetails, yelp}) => {
     deliveryUrl: getNestedProp(foursquareDetails, 'delivery', 'url'),
     tips: getTips(foursquareDetails), //array
     foursquareId: getProp(foursquareDetails, 'id'),
-    foursquareRating: getProp(foursquareDetails, 'rating'),
-    foursquarePrice: getNestedProp(foursquareDetails, 'price', 'tier'),
     foursquareUrl: getProp(foursquareDetails, 'shortUrl'),
     googleId: getProp(googleDetails, 'place_id'),
-    googleRating: getProp(googleDetails, 'rating'),
-    googlePrice: getProp(googleDetails, 'price_level'),
     yelpId: getProp(yelp, 'id'),
-    yelpPrice: getNestedProp(yelp, 'price', 'length'),
     yelpReviews: getYelpReviews(yelp),
-    yelpRating: getProp(yelp, 'rating'),
+    ratings: {
+      google: getProp(googleDetails, 'rating'),
+      yelp: getProp(yelp, 'rating'),
+      foursquare: getProp(foursquareDetails, 'rating')
+    },
+    prices: {
+      google: getProp(googleDetails, 'price_level'),
+      yelp: getNestedProp(yelp, 'price', 'length'),
+      foursquare: getNestedProp(foursquareDetails, 'price', 'tier')
+    }
   };
 
   //new calculations based on API data
-  reviewSiteData.averageRating = calculateAverageReview(reviewSiteData);
-  reviewSiteData.averagePrice = calculateAveragePrice(reviewSiteData);
+  reviewSiteData.averageRating = calculateAverageReview(reviewSiteData.ratings);
+  reviewSiteData.averagePrice = calculateAveragePrice(reviewSiteData.prices);
   reviewSiteData.ratingToPrice = calculateRatingToPrice(reviewSiteData);
 
   return reviewSiteData;
@@ -87,23 +91,24 @@ const getYelpReviews = (yelp) => {
   ) : undefined;
 };
 
-const calculateAverageReview = ({googleRating, foursquareRating, yelpRating}) => {
-  const adjFoursqRating = foursquareRating ? foursquareRating / 2 : undefined; //foursquare rating is out of 10 not 5
-  const ratings = [googleRating, adjFoursqRating, yelpRating].filter(rating => !!rating);
+const calculateAverageReview = ({google, foursquare, yelp}) => {
+  const adjFoursqRating = foursquare ? foursquare / 2 : undefined; //foursquare rating is out of 10 not 5
+  const ratings = [google, adjFoursqRating, yelp].filter(rating => !!rating);
   const avgRating = ratings.reduce((accum, rating) => {
     return accum + rating
   }, 0) / ratings.length;
   return Number(avgRating.toFixed(1));
 };
 
-const calculateAveragePrice = ({googlePrice, foursquarePrice, yelpPrice}) => {
-  const prices = [googlePrice, foursquarePrice, yelpPrice].filter(price => !!price);
+const calculateAveragePrice = ({google, foursquare, yelp}) => {
+  const prices = [google, foursquare, yelp].filter(price => !!price);
   const avgPrice = prices.reduce((accum, price) => {
     return accum + price;
   }, 0) / prices.length;
   return Number(avgPrice.toFixed(1));
 };
 
+//TODO: Make this a more meaningful calculation
 const calculateRatingToPrice = ({averageRating, averagePrice}) => {
   return Number((averageRating / averagePrice).toFixed(1));
 }

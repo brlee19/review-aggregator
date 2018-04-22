@@ -35,6 +35,7 @@ app.post('/details', (req, res) => {
   console.log('req.body is', req.body);
   const {id, name, phone, coordinates} = req.body;
   const combinedData = {}; //closure variable to house all the data sent back to client
+  let organizedData = {};
   combinedData.yelp = req.body;
 
   const yelpPromise = yelp.getReviewExcerpts(id) //this promise will be the same regardless of db contents
@@ -68,13 +69,13 @@ app.post('/details', (req, res) => {
       // console.log('review site promises are', reviewSitePromises);
       Promise.all(reviewSitePromises)
       .then(() => {
-        console.log('organized place data is', utils.organizePlacesData(combinedData));
-        res.send(combinedData);
+        organizedData = utils.organizePlacesData(combinedData);
+        res.send(organizedData);
       })
       .then(() => { //save ids to db if they aren't already there
-        const combinedIds = {yelp: id,
-                             google: combinedData.googleDetails.place_id,
-                             foursquare: combinedData.foursquareDetails.id};
+        const combinedIds = {yelp: organizedData.yelpId,
+                             google: organizedData.googleId,
+                             foursquare: organizedData.foursquareId};
         db.addIds(combinedIds);
       })
       .catch(err => console.log(err));
