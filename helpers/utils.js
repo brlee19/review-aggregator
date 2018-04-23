@@ -55,7 +55,7 @@ const getAddress = ({location}) => { //yelp data will always exist bc initial ap
 const getDistanceInMiles = ({distance}) => {
   const miles = (Number(distance) * 0.000621371).toFixed(2);
   return `${miles} miles away`;
-}
+};
 
 const getPhoto = (foursq) => {
   return (!!foursq && !!foursq.bestPhoto) ? (
