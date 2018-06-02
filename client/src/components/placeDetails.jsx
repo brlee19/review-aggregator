@@ -81,19 +81,4 @@ const PlaceDetails = ({place}) => {
   );
 }
 
-//         <h4>foursquare tips</h4>
-//         {this.props.place.foursquare.tips.groups[0].items.map((tip, i) => <div style={smaller} key={i}>{tip.text} </div>)}
-//         <h4>yelp reviews</h4>
-//         {this.props.place.yelpReviews.map((review, i) => {
-//           return (<div style={smaller} key={i}>
-//                     <div>{review.rating} stars: {review.text} </div>
-//                     <a href={review.url} target="_blank">Read the full review</a>
-//                   </div>)
-//         })}
-//       </li>
-//     )
-//   }
-
-// }
-
 export default PlaceDetails;

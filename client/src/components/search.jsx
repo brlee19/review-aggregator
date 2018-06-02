@@ -1,7 +1,7 @@
 import React from 'react';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-// import Places from './places.jsx';
+import { MenuItem, Paper, RaisedButton, SelectField, Slider, TextField } from 'material-ui';
 
 class Search extends React.Component {
   
@@ -11,7 +11,7 @@ class Search extends React.Component {
       type: 'restaurant',
       keyword: 'korean',
       address: '369 Lexington Avenue, New York NY', //add something so you can't search without this??
-      radius: '10000' //convert to number later
+      radius: 10000 //convert to number later
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -36,28 +36,21 @@ class Search extends React.Component {
 
   render() {
     return(
-      <div>
-        <h2>Search for reviews!</h2>
+      <Paper style={{width: '50%', padding: '20px', margin: 'auto', fontWeight: 'bold', maxWidth: '4500px', overflowY: 'scroll'}}>
+        <h1>Welcome to ReviewCanoe</h1>
+        <h4>Search Yelp, Google, and FourSquare restaurants at the same time!</h4>
+        <pre>{this.state.radius}</pre>
+        <br></br>
+        <TextField size="1280" name="keyword" hintText='Enter details for your search, like "sushi"' onChange={this.handleChange}/>
+        <br></br>
+        <TextField size="128" name="address" hintText='Enter an address to search near' onChange={this.handleChange}/>
+        <br></br>
+        Search Radius: {this.state.radius} km
+        <Slider name="pomSessionsPerDay" value={this.state.radius} step={100}
+                onChange={(e, val) => this.setState({radius: val})} min={100} max={40000} style={{maxWidth: '450px'}}/>
 
-        <select name="type" onChange={this.handleChange}>
-          <option value="restaurant">Restaurants</option>
-          <option value="restaurant">Hotels--coming soon!</option>
-          <option value="restaurant">This menu actually picks restaurants no matter what you actually pick</option>
-        </select>
-
-        <input size="42" name="keyword" placeholder='Enter details for your search, like "sushi"' onChange={this.handleChange}/>
-
-        <input size="42" name="address" placeholder='Enter an address to search near' onChange={this.handleChange}/>
-
-        <select name="radius" onChange={this.handleChange} defaultValue={10000}>
-          <option value="500" type="number">500 meters</option>
-          <option value="1000" type="number">1000 meters</option>
-          <option value="10000" type="number">10 km</option>
-          <option value="40000" type="number">40 km</option>
-        </select>
-
-        <button onClick={this.search}>Search!</button>
-      </div>
+        <RaisedButton onClick={this.search}>Search!</RaisedButton>
+      </Paper>
     )
   }
 

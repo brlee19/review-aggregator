@@ -1,8 +1,9 @@
 import React from 'react';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PlaceOverview from './placeOverview.jsx';
 import PlaceDetails from './placeDetails.jsx';
 import axios from 'axios';
+import { Paper } from 'material-ui';
 
 const listStyle = {
   'listStyleType': 'none'
@@ -33,8 +34,8 @@ class Places extends React.Component {
 
   render() {
     return(
-      <div>
-        {this.state.selectedId ? <div></div> : <h1>Click on a card to get all the details!</h1>}
+      <Paper>
+        {this.state.selectedId ? null : <h1>Click on a card to get all the details!</h1>}
         <ul style={listStyle}>
         {this.props.location.places.map(place => {
           return place.id === this.state.selectedId ? ( /* checking to see if this place has been selected */
@@ -42,7 +43,7 @@ class Places extends React.Component {
             <PlaceOverview place={place} key={place.id} handleClick={this.getDetails}/>)
         })}
         </ul>
-      </div>
+      </Paper>
     )
   }
 

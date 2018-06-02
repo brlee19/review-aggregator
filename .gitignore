@@ -4,7 +4,7 @@ bower_components/
 client/.DS_Store
 client/src/.DS_Store
 .DS_Store
-
+client/dist/bundle.js
 build/
 config.js
 package-lock.json
