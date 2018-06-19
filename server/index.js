@@ -31,8 +31,8 @@ app.post('/search', (req, res) => {
     });
 });
 
-app.post('/details', (req, res) => {
-  const {id, name, phone, coordinates} = req.body;
+app.post('/details', async (req, res) => {
+  const { id, name, phone, coordinates } = req.body;
   const combinedData = {}; //TODO: reorganize this flow
   let organizedData = {};
   combinedData.yelp = req.body;

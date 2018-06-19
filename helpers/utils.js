@@ -1,6 +1,5 @@
 const organizePlacesData = ({foursquareDetails, googleDetails, yelp}) => {
-  //organized data from APIs
-  const reviewSiteData = { //functions will return undefined if foursquareDetails, etc. are missing
+  const reviewSiteData = {
     name: getProp(yelp, 'name'),
     address: getAddress(yelp),
     distance: getDistanceInMiles(yelp),
@@ -46,7 +45,7 @@ const getNestedProp = (details, topProp, nestedProp) => { //props two levels dee
   return !!details && details[topProp] ? details[topProp][nestedProp] : undefined;
 };
 
-const getAddress = ({location}) => { //yelp data will always exist bc initial api call is to yelp
+const getAddress = ({location}) => {
   return (!!location && !!location.display_address && location.display_address.length) ? (
     location.display_address.join(', ')
   ) : undefined;
@@ -108,9 +107,8 @@ const calculateAveragePrice = ({google, foursquare, yelp}) => {
   return Number(avgPrice.toFixed(1));
 };
 
-//TODO: Make this a more meaningful calculation
 const calculateRatingToPrice = ({averageRating, averagePrice}) => {
   return Number((averageRating / averagePrice).toFixed(1));
-}
+};
 
 exports.organizePlacesData = organizePlacesData;

@@ -4,7 +4,6 @@ const yelp = require('./yelp.js');
 const yelpToken = process.env.yelp_api_key || require('../config.js').yelp_api_key;
 const googleKey = process.env.google_api_key || require('../config.js').google_api_key;
 
-//convert google ID to yelp place details
 const extractGoogleAddressComponentLong = (type) => {
   return googleAddress.reduce((result, component) => {
     return (component.types.includes(type)) ? component.long_name : result;
@@ -28,9 +27,8 @@ const convertGoogleAddressToYelp = (googleAddress) => {
 };
 
 const getYelpDetailsFromGoogleId = (googleId) => {
-  return google.getPlaceDetails(googleId) //seems duplicative? the app already has access to all the google details at this point
+  return google.getPlaceDetails(googleId)
     .then((details) => {
-			// console.log('details are', details.address_components);
 			const yelpAddress = convertGoogleAddressToYelp(details.address_components);
       const params = {
         name: details.name,
@@ -43,13 +41,11 @@ const getYelpDetailsFromGoogleId = (googleId) => {
 			const tokenHeader = {'Authorization': 'Bearer ' + yelpToken};
 			return axios.get('https://api.yelp.com/v3/businesses/matches/best', {headers: tokenHeader, params: params})
 				.then((resp) => {
-          // console.log('yelp id is', resp.data.businesses[0].id);
-          return resp.data.businesses[0].id; //TODO: save in DB
+          return resp.data.businesses[0].id;
         })
-				.catch((err) => {console.log(err)}); //is this catch necessary?
+				.catch((err) => {console.log(err)});
     })
     .then((yelpId) => {
-      console.log('reached next promise chain, yelpid is', yelpId)
       const tokenHeader = {'Authorization': 'Bearer ' + yelpToken};
       return axios.get(`https://api.yelp.com/v3/businesses/${yelpId}`, {headers: tokenHeader})
         .then((resp) => {return resp.data})
@@ -58,22 +54,19 @@ const getYelpDetailsFromGoogleId = (googleId) => {
 		.catch(err => console.log(err));  
 };
 
-//convert yelp ID to google place details, not sure this id lookup is necessary
 const getGoogleDetailsFromYelpId = (yelpId) => {
   return yelp.getDetailsWithId(yelpId)
-    .then((details) => { //most of these details are already in React state
+    .then((details) => {
       const params = {
         location: `${details.coordinates.latitude},${details.coordinates.longitude}`,
-        radius: 10, //should be able to be pretty precise given the coordinates from yelp
-        type: 'restaurant', //hardcoded for now
+        radius: 10,
+        type: 'restaurant',
         keyword: details.name,
         key: googleKey
       };
-      // console.log('params inside get Google details are', params);
       return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
     })
     .then(resp => {
-      // console.log('resp inside get googledeets is', resp.data.results)
       return resp.data.results;
     })
     .catch(err => console.log(err));
@@ -83,8 +76,8 @@ const getGoogleDetailsFromYelpId = (yelpId) => {
 const getGoogleDetailsFromYelpData = (yelpData) => {
   const params = {
     location: `${yelpData.coordinates.latitude},${yelpData.coordinates.longitude}`,
-    radius: 10, //should be able to be pretty precise given the coordinates from yelp
-    type: 'restaurant', //hardcoded for now
+    radius: 10,
+    type: 'restaurant',
     keyword: yelpData.name,
     key: googleKey
   };
@@ -94,7 +87,6 @@ const getGoogleDetailsFromYelpData = (yelpData) => {
     })
     .catch(err => console.log(err));
 }
-//review results standardizers
 
 const detectReviewSite = (result) => {
   if (result.hasOwnProperty('place_id') || result.hasOwnProperty('geometry')) return 'google';
@@ -102,9 +94,7 @@ const detectReviewSite = (result) => {
   else throw 'Unable to conform search result, are you sure it\'s a yelp or google result?'
 };
 
-const conformSearchResult = (result) => { //type should still be in react state
-  //instead of conforming, consider creating a new search result with info from G, Y, and 4
-  //for example, FourSquare has menu links and tips
+const conformSearchResult = (result) => {
   let conformedResult = {
     reviewSite: detectReviewSite(result),
     id: null,
@@ -146,7 +136,6 @@ const conformSearchResult = (result) => { //type should still be in react state
       max: 4
     };
   }
-  //add other possibilities here
   return conformedResult;
 };
 
