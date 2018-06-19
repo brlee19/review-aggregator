@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const google = require('../helpers/google.js');
 const yelp = require('../helpers/yelp.js');
 const foursquare = require('../helpers/foursquare.js');
-const apis = require('../helpers/utils.js');
+const apis = require('../helpers/apis.js');
+const utils = require('../helpers/utils.js');
 const db = require('../database/index.js');
 
 const app = express();
@@ -25,20 +26,24 @@ app.post('/search', (req, res) => {
       res.send(yelpData);
     })
     .catch(err => {
-      console.log('err in search is', err);
+      console.log('err in yelp search is', err);
       res.send('sorry, error');
     });
 });
 
-app.post('/details', (req, res) => {
-  const {id, name, phone, coordinates} = req.body;
-  const combinedData = {}; //closure variable to house all the data sent back to client
+app.post('/details', async (req, res) => {
+  const { id, name, phone, coordinates } = req.body;
+  const combinedData = {}; //TODO: reorganize this flow
+  let organizedData = {};
+  combinedData.yelp = req.body;
 
   const yelpPromise = yelp.getReviewExcerpts(id) //this promise will be the same regardless of db contents
-    .then(reviews => combinedData.yelpReviews = reviews);
+    .then(reviews => {
+      combinedData.yelp.reviews = reviews;
+    });
 
   let reviewSitePromises = [yelpPromise]; //use Promise.all once this is filled in with google and foursquare
-  db.getIdsByYelpId(id)
+  db.getIdsByYelpId(id) //move logic to helper function?
     .then(res => { //construct promises based on whether data exists in the db
       if (!res || !res.google) {
         reviewSitePromises[1] = apis.getGoogleDetailsFromYelpData(req.body)
@@ -59,16 +64,17 @@ app.post('/details', (req, res) => {
       };
     })
     .then(() => {
-      // console.log('review site promises are', reviewSitePromises);
-      Promise.all(reviewSitePromises)
-      .then(() => res.send(combinedData))
-      .then(() => { //save ids to db if they aren't already there
-        const combinedIds = {yelp: id,
-                             google: combinedData.googleDetails.place_id,
-                             foursquare: combinedData.foursquareDetails.id};
-        db.addIds(combinedIds);
-      })
-      .catch(err => console.log(err));
+      return Promise.all(reviewSitePromises)
+    })
+    .then(() => {
+      organizedData = utils.organizePlacesData(combinedData);
+      res.send(organizedData);
+    })
+    .then(() => { //save ids to db if they aren't already there
+      const combinedIds = {yelp: organizedData.yelpId,
+                           google: organizedData.googleId,
+                           foursquare: organizedData.foursquareId};
+      db.addIds(combinedIds);
     })
     .catch(err => console.log(err));
 });

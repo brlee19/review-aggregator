@@ -1,8 +1,9 @@
 import React from 'react';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PlaceOverview from './placeOverview.jsx';
 import PlaceDetails from './placeDetails.jsx';
 import axios from 'axios';
+import { Paper } from 'material-ui';
 
 const listStyle = {
   'listStyleType': 'none'
@@ -13,30 +14,19 @@ class Places extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      baseData: '', //base yelp of the selected place
-      yelpReviews: '',
-      google: '',
-      foursquare: ''
+      selectedId: '',
+      details: ''
     };
     this.getDetails = this.getDetails.bind(this);
   }
 
   getDetails(placeData) {
-    axios.post('/details', placeData)
+    axios.post('/details', placeData) //now sending entire place data to server
       .then((resp) => {
-        // console.log(resp.data);
-        const selectedPlace = this.props.location.places.filter(place => place.id === placeData.id)[0];
-        console.log({
-          baseData: selectedPlace,
-          yelpReviews: resp.data.yelpReviews,
-          google: resp.data.googleDetails,
-          foursquare: resp.data.foursquareDetails
-        });
+        console.log('data from server is', resp.data);
         this.setState({
-          baseData: selectedPlace,
-          yelpReviews: resp.data.yelpReviews,
-          google: resp.data.googleDetails,
-          foursquare: resp.data.foursquareDetails
+          selectedId: resp.data.yelpId,
+          details: resp.data
         });
       })
       .catch((err) => console.log(err)); 
@@ -44,17 +34,16 @@ class Places extends React.Component {
 
   render() {
     return(
-      <div>
-        {this.state.baseData ? <div></div> : <h1>Click on a card to get all the details!</h1>}
-        <pre>{JSON.stringify(this.props.location.places)}</pre>
+      <Paper>
+        {this.state.selectedId ? null : <h1>Click on a card to get all the details!</h1>}
         <ul style={listStyle}>
         {this.props.location.places.map(place => {
-          return place.id === this.state.baseData.id ? ( /* checking to see if this place has been selected */
-            <PlaceDetails place={this.state} key={place.id}/>) : (  
+          return place.id === this.state.selectedId ? ( /* checking to see if this place has been selected */
+            <PlaceDetails place={this.state.details} key={this.state.selectedId}/>) : (  
             <PlaceOverview place={place} key={place.id} handleClick={this.getDetails}/>)
         })}
         </ul>
-      </div>
+      </Paper>
     )
   }
 

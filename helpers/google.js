@@ -2,15 +2,14 @@ const axios = require('axios');
 const apiKey = process.env.google_api_key || require('../config.js').google_api_key;
 
 //google
-const convertAddressToCoords = (address) => {
+const convertAddressToCoords = async (address) => {
   const params = {address: address, key: apiKey};
-  console.log('apikey is', apiKey);
-  return axios.get('https://maps.googleapis.com/maps/api/geocode/json?', {params: params})
-    .then(resp => {
-      console.log('response from google is', resp);
-      return resp.data.results[0].geometry.location;
-    })
-    .catch(err => console.log('err trying to get lat/lon from google:', err)) //not sure if this needs to be here or should just be chained
+  try {
+    const googleGeocodeResp = await(axios.get('https://maps.googleapis.com/maps/api/geocode/json?', {params: params}));
+    return googleGeocodeResp.data.results[0].geometry.location;
+  } catch(e) {
+    console.error('error trying to get lat/long from google')
+  }
 };
 
 const searchPlacesByCoords = (coords, query) => { //using coords so all the APIs can use it

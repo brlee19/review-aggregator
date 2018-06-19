@@ -10,7 +10,7 @@ const detailsStyle = {
 	fontFamily: 'Monospace',
 	fontSize: 'xx-large',
 	textAlign: 'left'
-}
+};
 
 const smaller = {
 	margin: '5px auto 5px auto',
@@ -18,77 +18,67 @@ const smaller = {
 	fontSize: 'large',
   textAlign: 'left',
   color: 'blue'
-}
+};
 
-class PlaceDetails extends React.Component {
-  
-  constructor(props) { //need to render a lot of details based on whether the details exist
-    super(props);
-    console.log(props.place);
-  }
+const medium = {
+	margin: '5px auto 5px auto',
+	fontFamily: 'Monospace',
+	fontSize: 'x-large',
+  textAlign: 'left',
+  color: 'blue'
+};
 
-  render() {
-    return (
-      <li style={detailsStyle}>
-        <pre>{}</pre>
-        <h2>{this.props.place.baseData.name}</h2>
-        <img src={this.props.place.foursquare.bestPhoto.prefix +
-                   '480x280' +
-                   this.props.place.foursquare.bestPhoto.suffix}>
-        </img>
-        <br></br>
-        {this.props.place.baseData.location.display_address.join(', ')}
-        <br></br>
-        {this.props.place.baseData.display_phone}
-        {(this.props.place.foursquare.hours && this.props.place.foursquare.hours.timeframes.length) ? (
-          <div>
-          <h4>hours</h4>
-          <div style={smaller}>
-            {this.props.place.foursquare.hours.timeframes.map((timeframe, i) => {
-              return <div key={i}>{timeframe.days} : {timeframe.open.map((openTime, j) => <span key={j}>{openTime.renderedTime}  </span>)}</div>
-            })}
-          </div>
-          </div>
-        ) : <span></span>}
-        <h4>stats</h4>
-        <div style={smaller}>
-          Yelp Rating: {this.props.place.baseData.rating || 'not available'} out of 5  ||
-          Google Rating: {this.props.place.google.rating || 'not available'} out of 5  ||
-          Foursquare Rating: {this.props.place.foursquare.rating ? `${this.props.place.foursquare.rating} out of 10` : 'not available'}  
-        </div>
-        <div style={smaller}>
-          Yelp Price: {this.props.place.baseData.price.length || 'not available'}  ||
-          Google Price: {this.props.place.google.price_level || 'not available'}  ||
-          Foursquare Price: {this.props.place.foursquare.price.tier || 'not available'}
-        </div>
-
-        <h4>links</h4>
-        <div style={smaller}>
-          {this.props.place.foursquare.menu ? (
-            <span><a href={this.props.place.foursquare.menu.mobileUrl} target="_blank">Menu Mobile</a>  || </span>
-          ): <div></div>}
-          {this.props.place.foursquare.menu ? (
-            <span><a href={this.props.place.foursquare.menu.url} target="_blank">Menu</a>  || </span>
-          ): <div></div>}
-          <a href={this.props.place.foursquare.url} target="_blank">Restaurant Home Page</a>  ||
-          <a href={this.props.place.foursquare.shortUrl} target="_blank">Foursquare Page</a>  ||
-          <a href={this.props.place.baseData.url} target="_blank">Yelp Page</a> 
-          {this.props.place.foursquare.delivery ? <span> ||  <a href={this.props.place.foursquare.delivery.url} target="_blank">Order Delivery</a></span> : <span></span>}
-        </div>
-
-        <h4>foursquare tips</h4>
-        {this.props.place.foursquare.tips.groups[0].items.map((tip, i) => <div style={smaller} key={i}>{tip.text} </div>)}
-        <h4>yelp reviews</h4>
-        {this.props.place.yelpReviews.map((review, i) => {
-          return (<div style={smaller} key={i}>
-                    <div>{review.rating} stars: {review.text} </div>
-                    <a href={review.url} target="_blank">Read the full review</a>
-                  </div>)
+const PlaceDetails = ({place}) => {
+  return (
+  <li style={detailsStyle}>
+    <h2>{place.name}</h2>
+    <div style={smaller}>{place.description}</div>
+    {place.photoUrl ? (<img src={place.photoUrl}></img>) : (<span></span>)}
+    <br></br>
+    {place.address} ({place.distance})
+    <br></br>
+    {place.phone}
+    {place.hours ? (
+      <div>
+        <h4> hours </h4> 
+        {place.hours.map((hour, i) => {
+          return <div style={smaller} key={i}>{hour}</div>
         })}
-      </li>
-    )
-  }
+      </div>): <span></span>}
 
+    <h4>stats</h4>
+      <div style={medium}><b>reviewcanoe value ratio: {place.ratingToPrice}</b></div>
+      <div style={smaller}><b>average rating (out of 5): {place.averageRating}</b></div>
+      {Object.entries(place.ratings).map((rating, i) => <span key={i} style={smaller}>{rating[0]}:  {rating[1]}  ||  </span>)}
+      <div style={smaller}><b>average price (out of 4): {place.averagePrice}</b></div>
+      {Object.entries(place.prices).map((price, i) => <span key={i} style={smaller}>{price[0]}:  {price[1]}  ||  </span>)}
+
+    <h4>links</h4>
+    <div style={smaller}>
+      <span>{place.menu ? <span><a href={place.menu} target="_blank">Menu</a>  ||  </span>: <span></span>}</span>
+      <span>{place.mobileMenu ? <span><a href={place.mobileMenu} target="_blank">Menu (mobile)</a>  ||  </span>: <span></span>}</span>
+      <span>{place.deliveryUrl ? <span><a href={place.deliveryUrl} target="_blank">Order delivery</a>  ||  </span>: <span></span>}</span>
+      <span>{place.url ? <span><a href={place.url} target="_blank">Restaurant Website</a>  ||  </span>: <span></span>}</span>
+      <span>{place.foursquareUrl ? <span><a href={place.foursquareUrl} target="_blank">Menu</a>  ||  </span>: <span></span>}</span>
+    </div>
+
+    <h4>foursquare tips</h4>
+    <div style={smaller}>
+      {place.tips ? place.tips.map((tip, i) => <div key={i}>{tip}</div>) : <span></span>}
+    </div>
+
+    <h4>yelp reviews</h4>
+    <div style={smaller}>
+      {place.yelpReviews ? place.yelpReviews.map((review, i) => {
+        return (<div key={i}>
+                  {review.rating} stars: {review.text}
+                  <a href={review.link} target="_blank"> read the full review on yelp</a>
+                </div>
+          )
+      }) : <span></span>}
+    </div>
+  </li>
+  );
 }
 
 export default PlaceDetails;

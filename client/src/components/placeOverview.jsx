@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, Paper } from 'material-ui';
 //component only is aware of yelp info
 
 const overviewStyle = {
@@ -24,14 +25,10 @@ class PlaceOverview extends React.Component {
 
   render() {
     return(
+      <Card>
       <li style={overviewStyle}
           onClick={
-            () => this.props.handleClick({
-              id: this.props.place.id,
-              coordinates: this.props.place.coordinates,
-              name: this.props.place.name,
-              phone: this.props.place.phone
-            })
+            () => this.props.handleClick(this.props.place)
           }
       >
       <br></br>
@@ -48,6 +45,7 @@ class PlaceOverview extends React.Component {
       <br></br>
       <a href={this.props.place.url} target="_blank">Go to the Yelp review page!</a>
       </li>
+      </Card>
     )
   }
 
