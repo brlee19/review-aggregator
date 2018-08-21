@@ -4,12 +4,11 @@ const token = process.env.yelp_api_key || require('../config.js').yelp_api_key;
 const tokenHeader = {'Authorization': 'Bearer ' + token};
 
 const searchPlacesByCoords = (coords, query) => {
-  // console.log('query inside yelp search is', query);
   const config = {
     latitude: coords.lat,
     longitude: coords.lng,
     radius: Number(query.radius),
-    categories: query.categories, //may need to map google to yelp cats, cats are optional for yelp OR just use google for searching and use yelp for reviews
+    categories: query.categories,
     term: query.term
   };
   return axios.get('https://api.yelp.com/v3/businesses/search', {headers: tokenHeader, params: config})
@@ -21,7 +20,7 @@ const searchPlacesByCoords = (coords, query) => {
     })
 };
 
-const getDetailsWithId = (yelpId) => { //not sure this has any additional details
+const getDetailsWithId = (yelpId) => {
   return axios.get(`https://api.yelp.com/v3/businesses/${yelpId}`, {headers: tokenHeader})
     .then(resp => resp.data)
     .catch(err => {console.log(err)})
@@ -33,7 +32,7 @@ const getReviewExcerpts = (yelpId) => {
     .catch(err => {console.log(err)})
 }
 
-const getAverageRating = (places) => { //same as yelp but different from foursquare
+const getAverageRating = (places) => {
   const totalRatings = places.reduce((ratings, place) => {
     return ratings + place.rating;
   }, 0);

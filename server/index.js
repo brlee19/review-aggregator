@@ -14,8 +14,8 @@ app.listen(port, () => console.log(`listening on port ${port}!`));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
-app.post('/search', (req, res) => {
-  const userQuery = req.body.data;
+app.get('/search', (req, res) => {
+  const userQuery = req.query;
   google.convertAddressToCoords(userQuery.address)
     .then((coords) => { 
       const yelpQuery = yelp.mapQuery(userQuery);
@@ -31,20 +31,21 @@ app.post('/search', (req, res) => {
     });
 });
 
-app.post('/details', async (req, res) => {
-  const { id, name, phone, coordinates } = req.body;
-  const combinedData = {}; //TODO: reorganize this flow
+app.get('/details', (req, res) => {
+  const { id, name, phone, coordinates } = req.query;
+  console.log('req.query is', req.query)
+  const combinedData = {};
   let organizedData = {};
-  combinedData.yelp = req.body;
+  combinedData.yelp = req.query;
 
-  const yelpPromise = yelp.getReviewExcerpts(id) //this promise will be the same regardless of db contents
+  const yelpPromise = yelp.getReviewExcerpts(id)
     .then(reviews => {
       combinedData.yelp.reviews = reviews;
     });
 
-  let reviewSitePromises = [yelpPromise]; //use Promise.all once this is filled in with google and foursquare
-  db.getIdsByYelpId(id) //move logic to helper function?
-    .then(res => { //construct promises based on whether data exists in the db
+  let reviewSitePromises = [yelpPromise];
+  db.getIdsByYelpId(id)
+    .then(res => {
       if (!res || !res.google) {
         reviewSitePromises[1] = apis.getGoogleDetailsFromYelpData(req.body)
           .then(googleDetails => combinedData.googleDetails = googleDetails);
@@ -70,7 +71,7 @@ app.post('/details', async (req, res) => {
       organizedData = utils.organizePlacesData(combinedData);
       res.send(organizedData);
     })
-    .then(() => { //save ids to db if they aren't already there
+    .then(() => { 
       const combinedIds = {yelp: organizedData.yelpId,
                            google: organizedData.googleId,
                            foursquare: organizedData.foursquareId};

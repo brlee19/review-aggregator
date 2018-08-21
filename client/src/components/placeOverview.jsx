@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, Paper } from 'material-ui';
-//component only is aware of yelp info
 
 const overviewStyle = {
 	display: 'inline-block',
@@ -32,7 +31,6 @@ class PlaceOverview extends React.Component {
           }
       >
       <br></br>
-      <pre>{/*JSON.stringify(this.props.place)*/}</pre>
       <strong>{this.props.place.name}</strong>
       <br></br>
       {this.props.place.location.display_address.join(', ')}

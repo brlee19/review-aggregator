@@ -7,11 +7,11 @@ class Search extends React.Component {
   
   constructor(props) {
     super(props);
-    this.state = { //keys match google API cats except for location
+    this.state = {
       type: 'restaurant',
       keyword: 'korean',
-      address: '369 Lexington Avenue, New York NY', //add something so you can't search without this??
-      radius: 10000 //convert to number later
+      address: '369 Lexington Avenue, New York NY',
+      radius: 10000
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -23,7 +23,7 @@ class Search extends React.Component {
   }
 
   search() {
-    axios.post('/search', {data: this.state})
+    axios.get('/search', {params: this.state})
       .then((resp) => {
         this.props.history.push({
           pathname: '/places',

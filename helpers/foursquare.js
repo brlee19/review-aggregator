@@ -14,7 +14,6 @@ const getMatchingPlaceId = (coords, query) => {
     phone: query.phone,
     v: '20180323'
   };
-  // console.log('qs are', qs);
   return axios.get(`https://api.foursquare.com/v2/venues/search`, {params: qs})
     .then((resp) => {
       return resp.data.response.venues[0].id;

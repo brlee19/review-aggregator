@@ -1,7 +1,6 @@
 const axios = require('axios');
 const apiKey = process.env.google_api_key || require('../config.js').google_api_key;
 
-//google
 const convertAddressToCoords = async (address) => {
   const params = {address: address, key: apiKey};
   try {
@@ -12,14 +11,13 @@ const convertAddressToCoords = async (address) => {
   }
 };
 
-const searchPlacesByCoords = (coords, query) => { //using coords so all the APIs can use it
-  //query is something like {type: 'restaurant', keyword:'sushi'}
+const searchPlacesByCoords = (coords, query) => {
   console.log('query inside google search is', query);
   const params = {
     key: apiKey,
     location: `${coords.lat},${coords.lng}`,
     type: query.type,
-    radius: query.radius, //default radius for now
+    radius: query.radius,
     keyword: query.keyword
   };
   return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?', {params: params})
@@ -38,7 +36,7 @@ const getPlaceDetails = (placeid) => {
     .catch((err) => {console.log(err)})
 };
 
-const getAverageRating = (places) => { //same as yelp but different from foursquare
+const getAverageRating = (places) => {
   const totalRatings = places.reduce((ratings, place) => {
     return ratings + place.rating;
   }, 0);

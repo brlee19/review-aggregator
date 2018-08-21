@@ -21,7 +21,7 @@ class Places extends React.Component {
   }
 
   getDetails(placeData) {
-    axios.post('/details', placeData) //now sending entire place data to server
+    axios.get('/details', {params: placeData})
       .then((resp) => {
         console.log('data from server is', resp.data);
         this.setState({
@@ -38,7 +38,7 @@ class Places extends React.Component {
         {this.state.selectedId ? null : <h1>Click on a card to get all the details!</h1>}
         <ul style={listStyle}>
         {this.props.location.places.map(place => {
-          return place.id === this.state.selectedId ? ( /* checking to see if this place has been selected */
+          return place.id === this.state.selectedId ? (
             <PlaceDetails place={this.state.details} key={this.state.selectedId}/>) : (  
             <PlaceOverview place={place} key={place.id} handleClick={this.getDetails}/>)
         })}
