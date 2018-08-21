@@ -22,16 +22,17 @@ class Search extends React.Component {
     this.setState({[e.target.name]: e.target.value});
   }
 
-  search() {
-    axios.get('/search', {params: this.state})
-      .then((resp) => {
-        this.props.history.push({
-          pathname: '/places',
-          places: resp.data,
-          userQuery: this.state
-        });
-      })
-      .catch((err) => console.log(err));
+  async search() {
+    try {
+      const resp = await axios.get('/search', {params: this.state});
+      this.props.history.push({
+        pathname: '/places',
+        places: resp.data,
+        userQuery: this.state
+      });
+    } catch(e) {
+      console.log('error searching', e);
+    }
   }
 
   render() {
@@ -46,7 +47,7 @@ class Search extends React.Component {
         <TextField size="128" name="address" hintText='Enter an address to search near' onChange={this.handleChange}/>
         <br></br>
         Search Radius: {this.state.radius} km
-        <Slider name="pomSessionsPerDay" value={this.state.radius} step={100}
+        <Slider value={this.state.radius} step={100}
                 onChange={(e, val) => this.setState({radius: val})} min={100} max={40000} style={{maxWidth: '450px'}}/>
 
         <RaisedButton onClick={this.search}>Search!</RaisedButton>
