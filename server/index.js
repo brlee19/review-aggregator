@@ -7,9 +7,21 @@ const foursquare = require('../helpers/foursquare.js');
 const apis = require('../helpers/apis.js');
 const utils = require('../helpers/utils.js');
 const db = require('../database/index.js');
+const moment = require('moment');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const redis = require('redis');
+
+const client = redis.createClient();
+const { promisify } = require('util');
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
+
+client.on('connect', function(){
+  console.log('Connected to Redis...');
+});
+
 app.listen(port, () => console.log(`listening on port ${port}!`));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
@@ -31,9 +43,17 @@ app.get('/search', (req, res) => {
     });
 });
 
-app.get('/details', (req, res) => {
+app.get('/details', async (req, res) => {
   const { id, name, phone, coordinates } = req.query;
-  console.log('req.query is', req.query)
+
+  const redisResults = await getAsync(id);
+  if (redisResults) {
+    console.log('sending results from redis');
+    res.send(redisResults);
+    return
+  };
+
+  console.log('not found in redis, going to hit APIs');
   const combinedData = {};
   let organizedData = {};
   combinedData.yelp = req.query;
@@ -70,6 +90,10 @@ app.get('/details', (req, res) => {
     .then(() => {
       organizedData = utils.organizePlacesData(combinedData);
       res.send(organizedData);
+      return JSON.stringify(organizedData);
+    })
+    .then((restaurantDetails) => {
+      return setAsync(id, restaurantDetails, 'EX', 60 * 60 * 24); // cache expires after 24 hours
     })
     .then(() => { 
       const combinedIds = {yelp: organizedData.yelpId,
