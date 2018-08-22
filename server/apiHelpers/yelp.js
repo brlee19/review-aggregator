@@ -1,5 +1,5 @@
 const axios = require('axios');
-const token = process.env.yelp_api_key || require('../config.js').yelp_api_key;
+const token = process.env.yelp_api_key || require('../../config.js').yelp_api_key;
 
 const tokenHeader = {'Authorization': 'Bearer ' + token};
 
