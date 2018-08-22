@@ -92,7 +92,7 @@ app.get('/details', async (req, res) => {
       return JSON.stringify(organizedData);
     })
     .then((restaurantDetails) => {
-      return setAsync(id, restaurantDetails);
+      return setAsync(id, restaurantDetails, 'EX', 60 * 60 * 24); // cache expires after 24 hours
     })
     .then(() => { 
       const combinedIds = {yelp: organizedData.yelpId,
