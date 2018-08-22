@@ -1,7 +1,6 @@
-const id = process.env.foursquare_id || require('../config.js').foursquare_id;
-const secret = process.env.foursquare_secret || require('../config.js').foursquare_secret;
+const id = process.env.foursquare_id || require('../../config.js').foursquare_id;
+const secret = process.env.foursquare_secret || require('../../config.js').foursquare_secret;
 const axios = require('axios');
-const request = require('request');
 
 const getMatchingPlaceId = (coords, query) => {
   const qs = {
@@ -18,7 +17,7 @@ const getMatchingPlaceId = (coords, query) => {
     .then((resp) => {
       return resp.data.response.venues[0].id;
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log('Cannot find matching Foursquare venue id'));
 };
 
 const getPlaceDetails = (foursquareId) => {
@@ -30,7 +29,7 @@ const getPlaceDetails = (foursquareId) => {
   };
   return axios.get(`https://api.foursquare.com/v2/venues/${foursquareId}?`, {params: qs})
     .then((resp) => (resp.data.response.venue))
-    .catch((err) => console.log(err))
+    .catch((err) => console.log('Canont get place details from Foursquare'))
 };
 
 exports.getMatchingPlaceId = getMatchingPlaceId;

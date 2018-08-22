@@ -1,12 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 
-const google = require('../helpers/google.js');
-const yelp = require('../helpers/yelp.js');
-const foursquare = require('../helpers/foursquare.js');
-const apis = require('../helpers/apis.js');
-const utils = require('../helpers/utils.js');
-const db = require('../database/index.js');
+const google = require('./apiHelpers/google.js');
+const yelp = require('./apiHelpers/yelp.js');
+const foursquare = require('./apiHelpers/foursquare.js');
+const apis = require('./apiHelpers/apis.js');
+const utils = require('./apiHelpers/utils.js');
+const db = require('./database/index.js');
 const moment = require('moment');
 
 const app = express();
@@ -50,7 +51,7 @@ app.get('/details', async (req, res) => {
   if (redisResults) {
     console.log('sending results from redis');
     res.send(redisResults);
-    return
+    return;
   };
 
   console.log('not found in redis, going to hit APIs');
@@ -67,7 +68,7 @@ app.get('/details', async (req, res) => {
   db.getIdsByYelpId(id)
     .then(res => {
       if (!res || !res.google) {
-        reviewSitePromises[1] = apis.getGoogleDetailsFromYelpData(req.body)
+        reviewSitePromises[1] = apis.getGoogleDetailsFromYelpData({id, name, phone, coordinates})
           .then(googleDetails => combinedData.googleDetails = googleDetails);
       };
       if (!res || !res.foursquare) {

@@ -1,8 +1,8 @@
 const axios = require('axios');
 const google = require('./google.js');
 const yelp = require('./yelp.js');
-const yelpToken = process.env.yelp_api_key || require('../config.js').yelp_api_key;
-const googleKey = process.env.google_api_key || require('../config.js').google_api_key;
+const yelpToken = process.env.yelp_api_key || require('../../config.js').yelp_api_key;
+const googleKey = process.env.google_api_key || require('../../config.js').google_api_key;
 
 const extractGoogleAddressComponentLong = (type) => {
   return googleAddress.reduce((result, component) => {
@@ -49,7 +49,7 @@ const getYelpDetailsFromGoogleId = (googleId) => {
       const tokenHeader = {'Authorization': 'Bearer ' + yelpToken};
       return axios.get(`https://api.yelp.com/v3/businesses/${yelpId}`, {headers: tokenHeader})
         .then((resp) => {return resp.data})
-        .catch((err) => console.log(err))
+        .catch((err) => console.log('Error getting yelp details from google id', e))
     })
 		.catch(err => console.log(err));  
 };
@@ -69,7 +69,7 @@ const getGoogleDetailsFromYelpId = (yelpId) => {
     .then(resp => {
       return resp.data.results;
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log('Error getting google details from yelp id', e));
 }
 
 //this version skips another yelp API call since yelpData is available from the client
