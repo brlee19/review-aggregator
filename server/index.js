@@ -7,6 +7,7 @@ const foursquare = require('../helpers/foursquare.js');
 const apis = require('../helpers/apis.js');
 const utils = require('../helpers/utils.js');
 const db = require('../database/index.js');
+const moment = require('moment');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -52,7 +53,7 @@ app.get('/details', async (req, res) => {
     return
   };
 
-  console.log('not found in redis, going to hit APIs', redisResults)
+  console.log('not found in redis, going to hit APIs');
   const combinedData = {};
   let organizedData = {};
   combinedData.yelp = req.query;
@@ -99,7 +100,6 @@ app.get('/details', async (req, res) => {
                            google: organizedData.googleId,
                            foursquare: organizedData.foursquareId};
       db.addIds(combinedIds);
-      // cache results after sending
     })
     .catch(err => console.log(err));
 });
