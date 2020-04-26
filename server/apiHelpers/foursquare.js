@@ -1,5 +1,7 @@
-const id = process.env.foursquare_id || require('../../config.js').foursquare_id;
-const secret = process.env.foursquare_secret || require('../../config.js').foursquare_secret;
+const id =
+  process.env.foursquare_id || require('../../config.js').foursquare_id;
+const secret =
+  process.env.foursquare_secret || require('../../config.js').foursquare_secret;
 const axios = require('axios');
 
 const getMatchingPlaceId = (coords, query) => {
@@ -11,9 +13,10 @@ const getMatchingPlaceId = (coords, query) => {
     limit: 1,
     intent: 'match',
     phone: query.phone,
-    v: '20180323'
+    v: '20180323',
   };
-  return axios.get(`https://api.foursquare.com/v2/venues/search`, {params: qs})
+  return axios
+    .get(`https://api.foursquare.com/v2/venues/search`, { params: qs })
     .then((resp) => {
       return resp.data.response.venues[0].id;
     })
@@ -25,11 +28,14 @@ const getPlaceDetails = (foursquareId) => {
     VENUE_ID: foursquareId,
     client_id: id,
     client_secret: secret,
-    v: '20180323'
+    v: '20180323',
   };
-  return axios.get(`https://api.foursquare.com/v2/venues/${foursquareId}?`, {params: qs})
-    .then((resp) => (resp.data.response.venue))
-    .catch((err) => console.log('Canont get place details from Foursquare'))
+  return axios
+    .get(`https://api.foursquare.com/v2/venues/${foursquareId}?`, {
+      params: qs,
+    })
+    .then((resp) => resp.data.response.venue)
+    .catch((err) => console.log('Canont get place details from Foursquare'));
 };
 
 exports.getMatchingPlaceId = getMatchingPlaceId;

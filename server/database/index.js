@@ -5,30 +5,31 @@ const pool = new Pool({
   host: process.env.db_host || require('../../config.js').db_host,
   database: process.env.database || require('../../config.js').database,
   port: process.env.db_port || require('../../config.js').db_port,
-  password: process.env.db_password || require('../../config.js').db_password
+  password: process.env.db_password || require('../../config.js').db_password,
 });
 
 const getAllIds = () => {
   const queryStr = 'select * from review_site_ids';
-  return pool.query(queryStr)
-    .then(res => res.rows)
-    .catch(err => console.log(err));
+  return pool
+    .query(queryStr)
+    .then((res) => res.rows)
+    .catch((err) => console.log(err));
 };
 
 const getIdsByYelpId = (yelpId) => {
   const queryStr = `select * from review_site_ids where yelp = $1`;
   const values = [yelpId];
-  return pool.query(queryStr, values)
-    .then(res => res.rows[0])
-    .catch(err => console.log(err));
+  return pool
+    .query(queryStr, values)
+    .then((res) => res.rows[0])
+    .catch((err) => console.log(err));
 };
 
 const addIds = (ids) => {
   const queryStr = `insert into review_site_ids(yelp, google, foursquare) values ($1, $2, $3)\
                     on conflict (yelp) do nothing`;
   const values = [ids.yelp, ids.google, ids.foursquare];
-  return pool.query(queryStr, values)
-    .catch(err => console.log(err));
+  return pool.query(queryStr, values).catch((err) => console.log(err));
 };
 
 const reset = () => {
@@ -37,11 +38,9 @@ const reset = () => {
                     yelp varchar(140) unique,
                     google varchar(140) unique,
                     foursquare varchar(140) unique,
-                    primary key(yelp));`
-  return pool.query(queryStr)
-    .catch(err => console.log(err));
-}
-
+                    primary key(yelp));`;
+  return pool.query(queryStr).catch((err) => console.log(err));
+};
 
 exports.getAllIds = getAllIds;
 exports.getIdsByYelpId = getIdsByYelpId;

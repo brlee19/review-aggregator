@@ -1,0 +1,9 @@
+exports.yelp_api_key = '';
+exports.google_api_key = '';
+exports.foursquare_id = '';
+exports.foursquare_secret = '';
+exports.user = '';
+exports.host = '';
+exports.database = '';
+exports.port = '';
+exports.password = '';

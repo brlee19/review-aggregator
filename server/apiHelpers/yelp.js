@@ -1,7 +1,8 @@
 const axios = require('axios');
-const token = process.env.yelp_api_key || require('../../config.js').yelp_api_key;
+const token =
+  process.env.yelp_api_key || require('../../config.js').yelp_api_key;
 
-const tokenHeader = {'Authorization': 'Bearer ' + token};
+const tokenHeader = { Authorization: 'Bearer ' + token };
 
 const searchPlacesByCoords = (coords, query) => {
   const config = {
@@ -9,35 +10,49 @@ const searchPlacesByCoords = (coords, query) => {
     longitude: coords.lng,
     radius: Number(query.radius),
     categories: query.categories,
-    term: query.term
+    term: query.term,
   };
-  return axios.get('https://api.yelp.com/v3/businesses/search', {headers: tokenHeader, params: config})
-    .then(resp => {
-      return resp.data.businesses
+  return axios
+    .get('https://api.yelp.com/v3/businesses/search', {
+      headers: tokenHeader,
+      params: config,
     })
-    .catch(err => {
-      console.log(err)
+    .then((resp) => {
+      return resp.data.businesses;
     })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 const getDetailsWithId = (yelpId) => {
-  return axios.get(`https://api.yelp.com/v3/businesses/${yelpId}`, {headers: tokenHeader})
-    .then(resp => resp.data)
-    .catch(err => {console.log(err)})
-}
+  return axios
+    .get(`https://api.yelp.com/v3/businesses/${yelpId}`, {
+      headers: tokenHeader,
+    })
+    .then((resp) => resp.data)
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 const getReviewExcerpts = (yelpId) => {
-  return axios.get(`https://api.yelp.com/v3/businesses/${yelpId}/reviews`, {headers: tokenHeader})
-    .then(resp => resp.data.reviews)
-    .catch(err => {console.log(err)})
-}
+  return axios
+    .get(`https://api.yelp.com/v3/businesses/${yelpId}/reviews`, {
+      headers: tokenHeader,
+    })
+    .then((resp) => resp.data.reviews)
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 const getAverageRating = (places) => {
   const totalRatings = places.reduce((ratings, place) => {
     return ratings + place.rating;
   }, 0);
   const avgRating = totalRatings / places.length;
-  return Number((Math.round(avgRating * 100)/ 100).toFixed(1));
+  return Number((Math.round(avgRating * 100) / 100).toFixed(1));
 };
 
 const googleTypesToYelpCategories = {

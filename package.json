@@ -23,6 +23,9 @@
     "url": "https://github.com/brlee19/review-aggregator/issues"
   },
   "homepage": "https://github.com/brlee19/review-aggregator#readme",
+  "prettier": {
+    "singleQuote": true
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
@@ -52,6 +55,7 @@
     "enzyme-adapter-react-16": "^1.2.0",
     "file-loader": "^1.1.11",
     "jest": "^23.5.0",
+    "prettier": "2.0.5",
     "redux-devtools": "^3.4.1",
     "url-loader": "^1.0.1"
   }
