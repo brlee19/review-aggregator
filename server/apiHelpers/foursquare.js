@@ -9,7 +9,7 @@ const getMatchingPlaceId = (coords, query) => {
     client_id: id,
     client_secret: secret,
     name: query.name,
-    ll: `${coords.latitude},${coords.longitude}`,
+    ll: `${JSON.parse(coords).latitude},${JSON.parse(coords).longitude}`,
     limit: 1,
     intent: 'match',
     phone: query.phone,

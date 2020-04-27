@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon server/index.js",
     "server-dev": "nodemon server/index.js",
+    "server-debug": "nodemon --inspect server/index.js",
     "react-dev": "webpack -d --watch",
     "webpack": "webpack",
     "test": "jest"

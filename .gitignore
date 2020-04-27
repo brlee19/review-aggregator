@@ -8,3 +8,4 @@ client/dist/bundle.js
 build/
 config.js
 package-lock.json
+dump.rdb

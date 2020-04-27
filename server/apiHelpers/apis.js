@@ -100,8 +100,9 @@ const getGoogleDetailsFromYelpId = (yelpId) => {
 
 //this version skips another yelp API call since yelpData is available from the client
 const getGoogleDetailsFromYelpData = (yelpData) => {
+  const coords = JSON.parse(yelpData.coordinates);
   const params = {
-    location: `${yelpData.coordinates.latitude},${yelpData.coordinates.longitude}`,
+    location: `${coords.latitude},${coords.longitude}`,
     radius: 10,
     type: 'restaurant',
     keyword: yelpData.name,
