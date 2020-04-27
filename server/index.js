@@ -2,13 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const google = require('./apiHelpers/google.js');
-const yelp = require('./apiHelpers/yelp.js');
-const foursquare = require('./apiHelpers/foursquare.js');
-const apis = require('./apiHelpers/apis.js');
-const utils = require('./apiHelpers/utils.js');
+const { google, yelp, foursquare, utils, apis } = require('./apiHelpers');
 const db = require('./database/index.js');
-const moment = require('moment');
 
 const app = express();
 const port = process.env.PORT || 3000;
